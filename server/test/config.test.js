@@ -8,7 +8,7 @@ import {
 } from "../src/config.js";
 
 describe("server config", () => {
-  it("defaults Oracle to hidden browser mode with GPT-5.5 Instant", () => {
+  it("defaults Oracle to hidden browser mode with GPT-5.5 Instant and generous response timeouts", () => {
     assert.deepEqual(getOracleArgs({}), [
       "--engine",
       "browser",
@@ -16,6 +16,12 @@ describe("server config", () => {
       "--model",
       "gpt-5.5-instant",
       "--force",
+      "--browser-timeout",
+      "5m",
+      "--browser-recheck-delay",
+      "30s",
+      "--browser-recheck-timeout",
+      "2m",
     ]);
   });
 
