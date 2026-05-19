@@ -90,12 +90,16 @@ export function validateGenerateRequest(payload) {
     return "Request body must be a JSON object";
   }
 
-  const requiredFields = ["url", "title", "screenshotDataUrl", "intent"];
+  const requiredFields = ["url", "title", "screenshots", "intent"];
 
   for (const field of requiredFields) {
     if (payload[field] === undefined || payload[field] === null || payload[field] === "") {
       return `Missing required field: ${field}`;
     }
+  }
+
+  if (!Array.isArray(payload.screenshots) || payload.screenshots.length === 0) {
+    return "Field screenshots must be a non-empty array";
   }
 
   return null;

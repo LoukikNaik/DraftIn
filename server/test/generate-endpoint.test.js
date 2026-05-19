@@ -79,11 +79,14 @@ function request(handler, { method, url, body = "" }) {
 }
 
 function validRequest() {
+  const dataUrl = "data:image/png;base64,iVBORw0KGgo=";
   return {
     url: "https://www.linkedin.com/in/taylor-recruiter/",
     title: "Taylor Recruiter | LinkedIn",
     intent: "Draft a concise LinkedIn reach-out message about hiring opportunities.",
-    screenshotDataUrl: "data:image/png;base64,iVBORw0KGgo=",
+    screenshots: [dataUrl],
+    // Temporary: generation-service still reads screenshotDataUrl until cycle 8.
+    screenshotDataUrl: dataUrl,
   };
 }
 
