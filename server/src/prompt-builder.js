@@ -17,9 +17,9 @@ export function buildPrompt({ personalContext, request, hasScreenshot = true }) 
   if (hasScreenshot) {
     sections.push(
       "",
-      "The attached screenshot is a capture of the LinkedIn page above as the user currently sees it. Read it as the source of truth for the recipient: name, headline, current company, location, About text, recent posts, hiring banners, role descriptions, anything visible. The user has scrolled to whatever they consider relevant, so the visible portion is what matters. The page title and URL only exist to confirm which page the screenshot belongs to.",
+      "The attached screenshots, in order, are pages the user wants you to consider together when drafting the message. Typically the first is a LinkedIn profile or post about the recipient, and later screenshots may be a job description, a company careers page, or another piece of context on the same opportunity. Read all of them as the source of truth for the recipient and the role: name, headline, current company, location, About text, recent posts, hiring banners, role descriptions, anything visible. The user has scrolled to whatever they consider relevant in each capture, so the visible portion is what matters. The page title and URL only confirm which LinkedIn page anchors the request.",
       "",
-      "If a detail you would want (e.g., the recipient's name, a specific role title) is not visible in the screenshot, do not invent it. Work with what you can see, or fall back to the page title which usually starts with the recipient's name.",
+      "If a detail you would want (the recipient's name, a specific role title, a team) is not visible in any of the screenshots, do not invent it. Work with what you can see, or fall back to the page title which usually starts with the recipient's name.",
     );
   } else {
     sections.push(

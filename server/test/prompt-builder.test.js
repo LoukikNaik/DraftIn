@@ -33,6 +33,17 @@ describe("prompt builder", () => {
     assert.doesNotMatch(prompt, /No screenshot is attached/);
   });
 
+  it("frames multi-screenshot attachments as an ordered set", () => {
+    const prompt = buildPrompt({
+      personalContext: "Backend engineer.",
+      request: validRequest(),
+      hasScreenshot: true,
+    });
+
+    assert.match(prompt, /attached screenshots/i);
+    assert.match(prompt, /in order/i);
+  });
+
   it("falls back to title + URL guidance when no screenshot is attached", () => {
     const prompt = buildPrompt({
       personalContext: "Backend engineer.",
