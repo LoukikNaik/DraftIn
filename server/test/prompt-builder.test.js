@@ -65,11 +65,11 @@ describe("prompt builder", () => {
     assert.match(prompt, /Example 1/);
     assert.match(prompt, /Example 2/);
     assert.match(prompt, /Example 3/);
-    assert.match(prompt, /hey priya, i'm loukik/);
-    assert.match(prompt, /hi jordan, i'm loukik/);
-    assert.match(prompt, /hey sam, i'm loukik/);
-    assert.match(prompt, /m&a backend service at eudia/);
-    assert.match(prompt, /shipped real-time segmentation apis at plainsight/);
+    assert.match(prompt, /Hey Priya, I'm Loukik/);
+    assert.match(prompt, /Hi Jordan, I'm Loukik/);
+    assert.match(prompt, /Hey Sam, I'm Loukik/);
+    assert.match(prompt, /M&A backend service at Eudia/);
+    assert.match(prompt, /Shipped real-time segmentation APIs at Plainsight/);
   });
 
   it("bans the AI-template phrases the user flagged as fake", () => {
@@ -87,6 +87,33 @@ describe("prompt builder", () => {
     assert.match(prompt, /i was impressed by your background/i);
     assert.match(prompt, /here's what i've done/i);
     assert.match(prompt, /i would be a great fit because/i);
+  });
+
+  it("uses standard punctuation and proper capitalization, not enforced lowercase", () => {
+    const prompt = buildPrompt({
+      personalContext: "Backend engineer.",
+      request: validRequest(),
+    });
+
+    // No instruction that forces everything to lowercase.
+    assert.doesNotMatch(prompt, /lowercase throughout/i);
+    assert.doesNotMatch(prompt, /lowercase greeting/i);
+    assert.doesNotMatch(prompt, /lowercase product and library names/i);
+
+    // Greetings and identity in the examples use proper case.
+    assert.match(prompt, /Hey Priya, I'm Loukik/);
+    assert.match(prompt, /Hi Jordan, I'm Loukik/);
+    assert.match(prompt, /Hey Sam, I'm Loukik/);
+
+    // Proper-noun product/company names keep conventional casing in the examples.
+    assert.match(prompt, /M&A backend service at Eudia/);
+    assert.match(prompt, /at Plainsight/);
+
+    // Closing tag is capitalized.
+    assert.match(prompt, /I've worked across the stack/);
+
+    // Positive guidance for how to capitalize is in the prompt.
+    assert.match(prompt, /standard sentence capitalization/i);
   });
 
   it("does not blacklist phrases the user wants to keep available", () => {
