@@ -23,4 +23,17 @@ describe("extension manifest", () => {
     assert.ok(manifest.permissions.includes("clipboardWrite"));
     assert.ok(manifest.permissions.includes("offscreen"));
   });
+
+  it("declares Alt+K to add a screenshot and Alt+C to clear the buffer", async () => {
+    const manifest = JSON.parse(await readFile("extension/manifest.json", "utf8"));
+
+    assert.equal(manifest.commands["add-screenshot"].suggested_key.default, "Alt+K");
+    assert.equal(manifest.commands["clear-screenshots"].suggested_key.default, "Alt+C");
+  });
+
+  it("requests the storage permission for the screenshot buffer", async () => {
+    const manifest = JSON.parse(await readFile("extension/manifest.json", "utf8"));
+
+    assert.ok(manifest.permissions.includes("storage"));
+  });
 });

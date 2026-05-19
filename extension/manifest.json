@@ -17,6 +17,20 @@
         "mac": "Alt+L"
       },
       "description": "Draft a LinkedIn reach-out message"
+    },
+    "add-screenshot": {
+      "suggested_key": {
+        "default": "Alt+K",
+        "mac": "Alt+K"
+      },
+      "description": "Capture the visible viewport and add it to the screenshot buffer"
+    },
+    "clear-screenshots": {
+      "suggested_key": {
+        "default": "Alt+C",
+        "mac": "Alt+C"
+      },
+      "description": "Clear the screenshot buffer"
     }
   },
   "content_scripts": [
@@ -34,6 +48,7 @@
     "clipboardWrite",
     "offscreen",
     "scripting",
+    "storage",
     "tabs"
   ]
 }
