@@ -154,6 +154,97 @@ The generated message should:
 9. Add error handling for Oracle login/session failures.
 10. Add documentation for loading the unpacked extension and running the server.
 
+## Current MVP
+
+The repository now contains a working local-first MVP skeleton:
+
+- `extension/` contains the Chrome Manifest V3 extension.
+- `server/` contains the localhost HTTP server and Oracle CLI runner.
+- `profile/me.md` contains the personal outreach context generated from Loukik's resume.
+- `docs/tdd-plan.md` describes the test-first implementation plan.
+
+The extension flow is:
+
+1. Invoke the extension from the Chrome toolbar or `Alt+L`.
+2. Extract visible LinkedIn context from the active tab.
+3. Capture a screenshot of the visible tab.
+4. POST the context and screenshot to `http://127.0.0.1:17391/generate`.
+5. The server reads `profile/me.md`, builds a text prompt, and invokes `oracle`.
+6. The extension copies the generated message to the clipboard.
+7. If a LinkedIn editor is focused, the extension also attempts to insert the draft without sending it.
+
+## Setup
+
+Install Oracle separately and make sure the `oracle` command is available on your `PATH`:
+
+```bash
+which oracle
+```
+
+Make sure Oracle is configured/logged in for ChatGPT browser usage before relying on the extension.
+
+Run the local server:
+
+```bash
+npm run start:server
+```
+
+By default, the server invokes the patched local Oracle CLI with hidden browser mode and GPT-5.5 Instant:
+
+```text
+--engine browser --browser-hide-window --model gpt-5.5-instant --force
+```
+
+Optional environment variables:
+
+```bash
+LREACHOUT_PORT=17391
+LREACHOUT_HOST=127.0.0.1
+LREACHOUT_PROFILE_PATH=profile/me.md
+LREACHOUT_ORACLE_ARGS="--engine browser --browser-model-strategy current"
+LREACHOUT_ATTACH_SCREENSHOT=true
+```
+
+Load the Chrome extension:
+
+1. Open `chrome://extensions`.
+2. Enable Developer Mode.
+3. Click "Load unpacked".
+4. Select the `extension/` directory in this repo.
+5. Open LinkedIn and invoke the extension.
+
+## Development
+
+Run all tests:
+
+```bash
+npm test
+```
+
+Run only server tests:
+
+```bash
+npm run test:server
+```
+
+Run only extension tests:
+
+```bash
+npm run test:extension
+```
+
+This project intentionally uses Node's built-in test runner for the first MVP so it has no package dependencies yet.
+
+Note: the extension always captures a screenshot, but the server does not attach screenshots to Oracle by default. Browser-mode file uploads can timeout, and the LinkedIn page text is enough for the normal MVP flow.
+
+To attach screenshots anyway, start the server with:
+
+```bash
+LREACHOUT_ATTACH_SCREENSHOT=true npm run start:server
+```
+
+When enabled, server logs should show `1 attachments`, and the Oracle command should include an extra screenshot file.
+
 ## Open Decisions
 
 - Whether best-effort LinkedIn text-box insertion is worth keeping after clipboard support works.
