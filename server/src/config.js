@@ -46,6 +46,10 @@ export function getOracleArgs(env = process.env) {
     "30s",
     "--browser-recheck-timeout",
     "2m",
+    // Floor the "answer is stable" threshold so ChatGPT's mid-stream pauses
+    // (e.g., during image analysis) don't trip premature capture.
+    "--browser-min-stable-ms",
+    "15s",
   ];
 }
 

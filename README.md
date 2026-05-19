@@ -63,8 +63,10 @@ This keeps secrets and local automation out of the extension. It also lets the s
 
 Oracle is used as the model access layer:
 
-- Repository: <https://github.com/steipete/oracle>
+- Upstream repository: <https://github.com/steipete/oracle>
 - Site: <https://askoracle.sh/>
+- **Fork required for lreachout**: <https://github.com/LoukikNaik/oracle>. The default `getOracleArgs()` in `server/src/config.js` passes `--browser-min-stable-ms` and other flags that only exist on this fork (see branches `fix/browser-attachment-composer-scope` for the chip-scope + min-stable-ms fixes used by the multi-screenshot flow).
+- Clone the fork at `/Users/loukiknaik/projects/oracle` (the path `localOracleCli` in `server/src/config.js` resolves to). Build it with `pnpm install && pnpm run build` so `dist/bin/oracle-cli.js` exists.
 - It can drive ChatGPT through a browser session instead of using direct LLM API calls.
 - The user must be logged into ChatGPT in the Oracle/browser environment.
 - The generated response depends on the user's available ChatGPT plan and Oracle configuration.
