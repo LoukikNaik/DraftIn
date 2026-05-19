@@ -1,0 +1,39 @@
+{
+  "manifest_version": 3,
+  "name": "lreachout",
+  "version": "0.1.0",
+  "description": "Draft personalized LinkedIn reach-out messages through a local Oracle-backed server.",
+  "action": {
+    "default_title": "lreachout: draft LinkedIn message"
+  },
+  "background": {
+    "service_worker": "src/background.js",
+    "type": "module"
+  },
+  "commands": {
+    "draft-linkedin-message": {
+      "suggested_key": {
+        "default": "Alt+L",
+        "mac": "Alt+L"
+      },
+      "description": "Draft a LinkedIn reach-out message"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.linkedin.com/*"],
+      "js": ["src/content-runtime.js"]
+    }
+  ],
+  "host_permissions": [
+    "https://www.linkedin.com/*",
+    "http://127.0.0.1:17391/*"
+  ],
+  "permissions": [
+    "activeTab",
+    "clipboardWrite",
+    "offscreen",
+    "scripting",
+    "tabs"
+  ]
+}
