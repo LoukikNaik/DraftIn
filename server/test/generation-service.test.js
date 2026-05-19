@@ -39,6 +39,34 @@ describe("generation service", () => {
     assert.deepEqual(calls[0].attachments, []);
   });
 
+  it("creates one Oracle attachment per screenshot URL in the request", async () => {
+    const dir = await createTempDir();
+    const profilePath = path.join(dir, "me.md");
+    await writeFile(profilePath, "Backend engineer.", "utf8");
+    const calls = [];
+    const service = createGenerationService({
+      profilePath,
+      tempDir: dir,
+      oracleRunner: {
+        async run(input) {
+          calls.push(input);
+          return "ok";
+        },
+      },
+    });
+
+    await service({
+      ...validRequest(),
+      screenshots: [
+        "data:image/png;base64,iVBORw0KGgo=",
+        "data:image/png;base64,iVBORw0KGgo=",
+      ],
+    });
+
+    assert.equal(calls.length, 1);
+    assert.equal(calls[0].attachments.length, 2);
+  });
+
   it("wraps Oracle runner failures with a controlled error", async () => {
     const dir = await createTempDir();
     const profilePath = path.join(dir, "me.md");

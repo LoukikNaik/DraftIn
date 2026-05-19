@@ -37,6 +37,72 @@ describe("screenshot file handling", () => {
     await assert.rejects(() => access(screenshotPath), /ENOENT/);
   });
 
+  it("cleans up every attachment file after a successful Oracle run with multiple screenshots", async () => {
+    const dir = await createTempDir();
+    const profilePath = path.join(dir, "me.md");
+    await writeFile(profilePath, "I build hiring tools.", "utf8");
+    let capturedPaths;
+    const service = createGenerationService({
+      profilePath,
+      tempDir: dir,
+      attachScreenshot: true,
+      oracleRunner: {
+        async run(input) {
+          capturedPaths = input.attachments;
+          assert.equal(capturedPaths.length, 3);
+          await Promise.all(capturedPaths.map((path) => access(path)));
+          return "ok";
+        },
+      },
+    });
+
+    await service({
+      ...validRequest(),
+      screenshots: [
+        "data:image/png;base64,iVBORw0KGgo=",
+        "data:image/png;base64,iVBORw0KGgo=",
+        "data:image/png;base64,iVBORw0KGgo=",
+      ],
+    });
+
+    for (const filePath of capturedPaths) {
+      await assert.rejects(() => access(filePath), /ENOENT/);
+    }
+  });
+
+  it("cleans up every attachment file even when Oracle fails", async () => {
+    const dir = await createTempDir();
+    const profilePath = path.join(dir, "me.md");
+    await writeFile(profilePath, "I build hiring tools.", "utf8");
+    let capturedPaths;
+    const service = createGenerationService({
+      profilePath,
+      tempDir: dir,
+      attachScreenshot: true,
+      oracleRunner: {
+        async run(input) {
+          capturedPaths = input.attachments;
+          throw new Error("Oracle exploded");
+        },
+      },
+    });
+
+    await assert.rejects(() =>
+      service({
+        ...validRequest(),
+        screenshots: [
+          "data:image/png;base64,iVBORw0KGgo=",
+          "data:image/png;base64,iVBORw0KGgo=",
+        ],
+      }),
+    );
+
+    assert.equal(capturedPaths.length, 2);
+    for (const filePath of capturedPaths) {
+      await assert.rejects(() => access(filePath), /ENOENT/);
+    }
+  });
+
   it("rejects invalid screenshot data URLs before invoking Oracle", async () => {
     const dir = await createTempDir();
     const profilePath = path.join(dir, "me.md");
@@ -58,7 +124,7 @@ describe("screenshot file handling", () => {
       () =>
         service({
           ...validRequest(),
-          screenshotDataUrl: "not-a-data-url",
+          screenshots: ["not-a-data-url"],
         }),
       (error) => {
         assert.equal(error.code, "INVALID_SCREENSHOT_DATA_URL");
@@ -74,7 +140,7 @@ function validRequest() {
     url: "https://www.linkedin.com/in/taylor-recruiter/",
     title: "Taylor Recruiter | LinkedIn",
     intent: "Draft a concise LinkedIn reach-out message about hiring opportunities.",
-    screenshotDataUrl: "data:image/png;base64,iVBORw0KGgo=",
+    screenshots: ["data:image/png;base64,iVBORw0KGgo="],
   };
 }
 

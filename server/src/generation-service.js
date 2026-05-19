@@ -18,8 +18,11 @@ export function createGenerationService({
   return async function generate(request) {
     logger.info?.("[lreachout] loading personal context");
     const personalContext = await loadPersonalContext(profilePath);
+    const screenshots = Array.isArray(request.screenshots) ? request.screenshots : [];
     const attachments = attachScreenshot
-      ? [await createScreenshotAttachment(request.screenshotDataUrl, { tempDir })]
+      ? await Promise.all(
+          screenshots.map((dataUrl) => createScreenshotAttachment(dataUrl, { tempDir })),
+        )
       : [];
     logger.info?.("[lreachout] building Oracle prompt");
     const prompt = buildPrompt({
