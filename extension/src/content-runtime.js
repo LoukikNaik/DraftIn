@@ -1,27 +1,5 @@
 (() => {
-  function insertIntoFocusedEditor(documentRef, message) {
-    const element = documentRef.activeElement;
-
-    if (!element) {
-      return { inserted: false };
-    }
-
-    if (element.tagName === "TEXTAREA" || element.tagName === "INPUT") {
-      element.value = message;
-      dispatchInput(documentRef, element);
-      return { inserted: true };
-    }
-
-    if (element.isContentEditable) {
-      element.textContent = message;
-      dispatchInput(documentRef, element);
-      return { inserted: true };
-    }
-
-    return { inserted: false };
-  }
-
-  function showOverlay({ message, copied, inserted, error, status: providedStatus }, documentRef = document) {
+  function showOverlay({ message, copied, error, status: providedStatus }, documentRef = document) {
     documentRef.getElementById?.("lreachout-overlay")?.remove?.();
 
     const overlay = documentRef.createElement("div");
@@ -43,7 +21,7 @@
 
     const status = providedStatus ?? (error
       ? `lreachout error: ${error}`
-      : `Draft ready${copied ? " - copied" : ""}${inserted ? " - inserted" : ""}`);
+      : `Draft ready${copied ? " - copied" : ""}`);
 
     overlay.textContent = message ? `${status}\n\n${message}` : status;
     documentRef.body.append(overlay);
@@ -55,14 +33,6 @@
     if (message?.type === "LREACHOUT_PING") {
       return {
         ok: true,
-      };
-    }
-
-    if (message?.type === "LREACHOUT_INSERT_MESSAGE") {
-      const result = insertIntoFocusedEditor(document, message.message ?? "");
-      return {
-        ok: true,
-        inserted: result.inserted,
       };
     }
 
@@ -115,11 +85,6 @@
     }
 
     return succeeded;
-  }
-
-  function dispatchInput(documentRef, element) {
-    const EventConstructor = documentRef.defaultView?.InputEvent ?? documentRef.defaultView?.Event ?? Event;
-    element.dispatchEvent(new EventConstructor("input", { bubbles: true, inputType: "insertText" }));
   }
 
   chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {

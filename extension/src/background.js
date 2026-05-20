@@ -129,12 +129,10 @@ async function sendDraft(tab, screenshots) {
     ? { copied: true }
     : await copyMessageInPage(tab.id, result.message);
   const copied = offscreenCopy.copied || clipboardResult.copied || pageCopyResult.copied;
-  const insertion = await insertMessage(tab.id, result.message);
 
   await showStatus(tab.id, {
     message: result.message,
     copied,
-    inserted: insertion.inserted,
     error: copied ? undefined : offscreenCopy.error ?? clipboardResult.error,
   });
 }
@@ -226,19 +224,6 @@ async function ensureContentScript(tabId) {
     files: ["src/content-runtime.js"],
   });
   console.info("[lreachout] content script injected");
-}
-
-async function insertMessage(tabId, message) {
-  try {
-    const response = await chrome.tabs.sendMessage(tabId, {
-      type: "LREACHOUT_INSERT_MESSAGE",
-      message,
-    });
-
-    return { inserted: Boolean(response?.inserted) };
-  } catch {
-    return { inserted: false };
-  }
 }
 
 async function showStatus(tabId, payload) {

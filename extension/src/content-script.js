@@ -1,19 +1,9 @@
-import { insertIntoFocusedEditor } from "./linkedin-insertion.js";
-
 export function handleContentMessage(message, environment = {}) {
   const documentRef = environment.document ?? globalThis.document;
 
   if (message?.type === "LREACHOUT_PING") {
     return {
       ok: true,
-    };
-  }
-
-  if (message?.type === "LREACHOUT_INSERT_MESSAGE") {
-    const result = insertIntoFocusedEditor(documentRef, message.message ?? "");
-    return {
-      ok: true,
-      inserted: result.inserted,
     };
   }
 
@@ -68,7 +58,7 @@ async function copyFromPage(documentRef, message) {
   return succeeded;
 }
 
-export function showOverlay({ message, copied, inserted, error }, documentRef = globalThis.document) {
+export function showOverlay({ message, copied, error }, documentRef = globalThis.document) {
   const existing = documentRef.getElementById?.("lreachout-overlay");
   existing?.remove?.();
 
@@ -92,7 +82,7 @@ export function showOverlay({ message, copied, inserted, error }, documentRef = 
   const status = arguments[0].status ??
     (error
     ? `lreachout error: ${error}`
-    : `Draft ready${copied ? " - copied" : ""}${inserted ? " - inserted" : ""}`);
+    : `Draft ready${copied ? " - copied" : ""}`);
 
   overlay.textContent = message ? `${status}\n\n${message}` : status;
   documentRef.body.append(overlay);

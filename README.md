@@ -18,7 +18,6 @@ Chrome extension concept for drafting personalized LinkedIn reach-out messages w
 - Invoke Peter Steinberger's Oracle from the local server instead of calling an LLM API directly.
 - Return the generated message to the extension.
 - Copy the generated message to the clipboard.
-- Optionally attempt best-effort insertion into the currently focused LinkedIn message box.
 
 ## Non-Goals For The First Version
 
@@ -173,7 +172,6 @@ The extension flow is:
 4. POST the context and screenshot to `http://127.0.0.1:17391/generate`.
 5. The server reads `profile/me.md`, builds a text prompt, and invokes `oracle`.
 6. The extension copies the generated message to the clipboard.
-7. If a LinkedIn editor is focused, the extension also attempts to insert the draft without sending it.
 
 ## Setup
 
@@ -249,7 +247,6 @@ When enabled, server logs should show `1 attachments`, and the Oracle command sh
 
 ## Open Decisions
 
-- Whether best-effort LinkedIn text-box insertion is worth keeping after clipboard support works.
 - Whether the local server should be Node.js, Python, or another runtime.
 - Whether screenshots should be sent to Oracle every time or only when DOM extraction is insufficient.
 - How much prompt history or examples should live in `profile/me.md` versus separate prompt templates.
