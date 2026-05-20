@@ -39,10 +39,11 @@ export function createGenerationService({
         prompt,
         attachments,
       });
-      logger.info?.(`[lreachout] Oracle returned ${message.trim().length} chars`);
+      const normalized = normalizeBulletMarkers(message.trim());
+      logger.info?.(`[lreachout] Oracle returned ${normalized.length} chars`);
 
       return {
-        message: message.trim(),
+        message: normalized,
         source: "oracle",
       };
     } catch (error) {
@@ -55,6 +56,10 @@ export function createGenerationService({
       await cleanupAttachments(attachments);
     }
   };
+}
+
+export function normalizeBulletMarkers(message) {
+  return message.replace(/^(\s*)\*(\s+)/gm, "$1-$2");
 }
 
 const defaultOracleRunner = {
