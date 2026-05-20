@@ -14,7 +14,7 @@ describe("prompt builder", () => {
     assert.match(prompt, /URL: https:\/\/www\.linkedin\.com\/in\/example-recruiter\//);
     assert.match(prompt, /Page title: Example Recruiter \| LinkedIn/);
     assert.match(prompt, /first name only/i);
-    assert.match(prompt, /120 to 180 words/);
+    assert.match(prompt, /100 to 150 words/);
     assert.match(prompt, /em dashes/);
     assert.match(prompt, /never invent/i);
     assert.match(prompt, /Return only the message body/);
@@ -49,9 +49,10 @@ describe("prompt builder", () => {
       request: validRequest(),
     });
 
-    assert.match(prompt, /i'll keep this short/i);
-    assert.match(prompt, /based in the bay area/i);
-    assert.match(prompt, /4 to 5 bullets/i);
+    assert.match(prompt, /keeping this short/i);
+    assert.match(prompt, /came across your/i);
+    assert.match(prompt, /2 or 3 bullets/i);
+    assert.match(prompt, /Based in the Bay Area/);
     assert.match(prompt, /day one/i);
     assert.match(prompt, /across the stack/i);
   });
@@ -65,11 +66,36 @@ describe("prompt builder", () => {
     assert.match(prompt, /Example 1/);
     assert.match(prompt, /Example 2/);
     assert.match(prompt, /Example 3/);
-    assert.match(prompt, /Hey Priya, I'm Loukik/);
-    assert.match(prompt, /Hi Jordan, I'm Loukik/);
-    assert.match(prompt, /Hey Sam, I'm Loukik/);
-    assert.match(prompt, /M&A backend service at Eudia/);
-    assert.match(prompt, /Shipped real-time segmentation APIs at Plainsight/);
+    assert.match(prompt, /Hey Priya, came across/);
+    assert.match(prompt, /Hi Jordan, came across/);
+    assert.match(prompt, /Hey Sam, came across/);
+    assert.match(prompt, /backend service at a legal AI startup \(Eudia\)/);
+    assert.match(prompt, /real-time segmentation APIs at Plainsight/);
+  });
+
+  it("provides three role-shaped examples that draw bullets from distinct slices of the profile", () => {
+    const prompt = buildPrompt({
+      personalContext: "Backend engineer.",
+      request: validRequest(),
+    });
+
+    // Routing block instructs the model to classify the role surface.
+    assert.match(prompt, /backend \/ platform \/ infra/i);
+    assert.match(prompt, /agentic \/ applied AI/i);
+    assert.match(prompt, /ML \/ MLOps \/ computer vision/i);
+    assert.match(prompt, /Do not blend slices/i);
+
+    // Each example is labeled with its bucket so the model sees the routing demo.
+    assert.match(prompt, /Example 1 — BACKEND/);
+    assert.match(prompt, /Example 2 — AGENTIC/);
+    assert.match(prompt, /Example 3 — ML \/ MLOps/);
+
+    // The agentic example leans on agent-specific facts, not generic backend plumbing.
+    assert.match(prompt, /off Airflow onto Temporal/i);
+
+    // The ML example pulls Plainsight-only facts.
+    assert.match(prompt, /OCR evaluation framework/);
+    assert.match(prompt, /Vertex AI/);
   });
 
   it("bans the AI-template phrases the user flagged as fake", () => {
@@ -83,10 +109,13 @@ describe("prompt builder", () => {
     assert.match(prompt, /this really stood out to me/i);
     assert.match(prompt, /this is the kind of work i have been looking for/i);
     assert.match(prompt, /to be honest/i);
-    assert.match(prompt, /came across your profile/i);
     assert.match(prompt, /i was impressed by your background/i);
     assert.match(prompt, /here's what i've done/i);
     assert.match(prompt, /i would be a great fit because/i);
+
+    // "came across" is the new opener — it must not appear in the banned list.
+    const bannedBlock = extractSection(prompt, "## Banned phrases", "##");
+    assert.doesNotMatch(bannedBlock, /came across/i);
   });
 
   it("uses standard punctuation and proper capitalization, not enforced lowercase", () => {
@@ -100,13 +129,13 @@ describe("prompt builder", () => {
     assert.doesNotMatch(prompt, /lowercase greeting/i);
     assert.doesNotMatch(prompt, /lowercase product and library names/i);
 
-    // Greetings and identity in the examples use proper case.
-    assert.match(prompt, /Hey Priya, I'm Loukik/);
-    assert.match(prompt, /Hi Jordan, I'm Loukik/);
-    assert.match(prompt, /Hey Sam, I'm Loukik/);
+    // Greetings in the examples use proper case.
+    assert.match(prompt, /Hey Priya, came across/);
+    assert.match(prompt, /Hi Jordan, came across/);
+    assert.match(prompt, /Hey Sam, came across/);
 
     // Proper-noun product/company names keep conventional casing in the examples.
-    assert.match(prompt, /M&A backend service at Eudia/);
+    assert.match(prompt, /\(Eudia\)/);
     assert.match(prompt, /at Plainsight/);
 
     // Closing tag is capitalized.
@@ -130,6 +159,43 @@ describe("prompt builder", () => {
     assert.doesNotMatch(bannedBlock, /love what you're building/i);
     assert.doesNotMatch(bannedBlock, /would love to chat/i);
     assert.doesNotMatch(bannedBlock, /would love to connect/i);
+  });
+
+  it("teaches the model to write human bullets, not JD comma-soup", () => {
+    const prompt = buildPrompt({
+      personalContext: "Backend engineer.",
+      request: validRequest(),
+    });
+
+    assert.match(prompt, /25 to 45 words/);
+    assert.match(prompt, /One idea per bullet/);
+    assert.match(prompt, /At most TWO technologies per bullet/);
+    assert.match(prompt, /Vary shape/);
+    assert.match(prompt, /coffee describing the work/i);
+    assert.match(prompt, /NEVER heard of Eudia/);
+  });
+
+  it("requires a one-line Bay Area intro that orients a stranger before the bullets", () => {
+    const prompt = buildPrompt({
+      personalContext: "Backend engineer.",
+      request: validRequest(),
+    });
+
+    assert.match(prompt, /one-line context for someone who has no idea who I am/i);
+    assert.match(prompt, /Based in the Bay Area\. Spent the last year/);
+    // The intro must NOT lean on the company name as a load-bearing reference.
+    assert.match(prompt, /NOT using the company name/);
+  });
+
+  it("forbids image generation so Oracle never produces a visual asset", () => {
+    const prompt = buildPrompt({
+      personalContext: "Backend engineer.",
+      request: validRequest(),
+    });
+
+    assert.match(prompt, /Output text ONLY/);
+    assert.match(prompt, /Do not generate.*image/i);
+    assert.match(prompt, /do not call it/i);
   });
 
   it("falls back to title + URL guidance when no screenshot is attached", () => {
