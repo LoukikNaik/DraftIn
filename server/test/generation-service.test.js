@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, describe, it } from "node:test";
 
-import { createGenerationService } from "../src/generation-service.js";
+import { createGenerationService, normalizeBulletMarkers } from "../src/generation-service.js";
 
 const tempDirs = [];
 
@@ -37,6 +37,60 @@ describe("generation service", () => {
     assert.match(calls[0].prompt, /I build recruiting workflow tools/);
     assert.match(calls[0].prompt, /taylor-recruiter/);
     assert.deepEqual(calls[0].attachments, []);
+  });
+
+  it("creates one Oracle attachment per screenshot URL in the request", async () => {
+    const dir = await createTempDir();
+    const profilePath = path.join(dir, "me.md");
+    await writeFile(profilePath, "Backend engineer.", "utf8");
+    const calls = [];
+    const service = createGenerationService({
+      profilePath,
+      tempDir: dir,
+      oracleRunner: {
+        async run(input) {
+          calls.push(input);
+          return "ok";
+        },
+      },
+    });
+
+    await service({
+      ...validRequest(),
+      screenshots: [
+        "data:image/png;base64,iVBORw0KGgo=",
+        "data:image/png;base64,iVBORw0KGgo=",
+      ],
+    });
+
+    assert.equal(calls.length, 1);
+    assert.equal(calls[0].attachments.length, 2);
+  });
+
+  it("rewrites leading `* ` bullet markers to `- ` in the Oracle output", async () => {
+    const dir = await createTempDir();
+    const profilePath = path.join(dir, "me.md");
+    await writeFile(profilePath, "Backend engineer.", "utf8");
+    const service = createGenerationService({
+      profilePath,
+      attachScreenshot: false,
+      oracleRunner: {
+        async run() {
+          return "Hey Amy.\n\n* Shipped backend APIs.\n* Migrated orchestration.\n\nWould love to chat.";
+        },
+      },
+    });
+
+    const result = await service(validRequest());
+
+    assert.match(result.message, /^- Shipped backend APIs\./m);
+    assert.match(result.message, /^- Migrated orchestration\./m);
+    assert.doesNotMatch(result.message, /^\* /m);
+  });
+
+  it("normalizeBulletMarkers leaves non-bullet asterisks untouched", () => {
+    assert.equal(normalizeBulletMarkers("Run 5 * 3 in your head."), "Run 5 * 3 in your head.");
+    assert.equal(normalizeBulletMarkers("  * indented bullet"), "  - indented bullet");
   });
 
   it("wraps Oracle runner failures with a controlled error", async () => {

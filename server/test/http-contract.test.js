@@ -30,6 +30,56 @@ describe("HTTP contract", () => {
       },
     });
   });
+
+  it("rejects generation requests that omit the screenshots array", async () => {
+    const response = await request(createHandler(), {
+      method: "POST",
+      url: "/generate",
+      body: JSON.stringify({
+        url: "https://www.linkedin.com/in/example/",
+        title: "Example | LinkedIn",
+        intent: "Draft a message.",
+      }),
+    });
+
+    assert.equal(response.status, 400);
+    assert.equal(response.body.error.code, "INVALID_GENERATE_REQUEST");
+    assert.match(response.body.error.message, /screenshots/);
+  });
+
+  it("rejects generation requests with an empty screenshots array", async () => {
+    const response = await request(createHandler(), {
+      method: "POST",
+      url: "/generate",
+      body: JSON.stringify({
+        url: "https://www.linkedin.com/in/example/",
+        title: "Example | LinkedIn",
+        intent: "Draft a message.",
+        screenshots: [],
+      }),
+    });
+
+    assert.equal(response.status, 400);
+    assert.equal(response.body.error.code, "INVALID_GENERATE_REQUEST");
+    assert.match(response.body.error.message, /screenshots/);
+  });
+
+  it("rejects generation requests where screenshots is not an array", async () => {
+    const response = await request(createHandler(), {
+      method: "POST",
+      url: "/generate",
+      body: JSON.stringify({
+        url: "https://www.linkedin.com/in/example/",
+        title: "Example | LinkedIn",
+        intent: "Draft a message.",
+        screenshots: "data:image/png;base64,A",
+      }),
+    });
+
+    assert.equal(response.status, 400);
+    assert.equal(response.body.error.code, "INVALID_GENERATE_REQUEST");
+    assert.match(response.body.error.message, /screenshots/);
+  });
 });
 
 function request(handler, { method, url, body = "" }) {

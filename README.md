@@ -18,7 +18,6 @@ Chrome extension concept for drafting personalized LinkedIn reach-out messages w
 - Invoke Peter Steinberger's Oracle from the local server instead of calling an LLM API directly.
 - Return the generated message to the extension.
 - Copy the generated message to the clipboard.
-- Optionally attempt best-effort insertion into the currently focused LinkedIn message box.
 
 ## Non-Goals For The First Version
 
@@ -63,8 +62,10 @@ This keeps secrets and local automation out of the extension. It also lets the s
 
 Oracle is used as the model access layer:
 
-- Repository: <https://github.com/steipete/oracle>
+- Upstream repository: <https://github.com/steipete/oracle>
 - Site: <https://askoracle.sh/>
+- **Fork required for lreachout**: <https://github.com/LoukikNaik/oracle>. The default `getOracleArgs()` in `server/src/config.js` passes `--browser-min-stable-ms` and other flags that only exist on this fork (see branches `fix/browser-attachment-composer-scope` for the chip-scope + min-stable-ms fixes used by the multi-screenshot flow).
+- Clone the fork at `/Users/loukiknaik/projects/oracle` (the path `localOracleCli` in `server/src/config.js` resolves to). Build it with `pnpm install && pnpm run build` so `dist/bin/oracle-cli.js` exists.
 - It can drive ChatGPT through a browser session instead of using direct LLM API calls.
 - The user must be logged into ChatGPT in the Oracle/browser environment.
 - The generated response depends on the user's available ChatGPT plan and Oracle configuration.
@@ -171,7 +172,6 @@ The extension flow is:
 4. POST the context and screenshot to `http://127.0.0.1:17391/generate`.
 5. The server reads `profile/me.md`, builds a text prompt, and invokes `oracle`.
 6. The extension copies the generated message to the clipboard.
-7. If a LinkedIn editor is focused, the extension also attempts to insert the draft without sending it.
 
 ## Setup
 
@@ -247,7 +247,6 @@ When enabled, server logs should show `1 attachments`, and the Oracle command sh
 
 ## Open Decisions
 
-- Whether best-effort LinkedIn text-box insertion is worth keeping after clipboard support works.
 - Whether the local server should be Node.js, Python, or another runtime.
 - Whether screenshots should be sent to Oracle every time or only when DOM extraction is insufficient.
 - How much prompt history or examples should live in `profile/me.md` versus separate prompt templates.

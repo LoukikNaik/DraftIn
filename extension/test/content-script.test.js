@@ -10,32 +10,6 @@ describe("content script message handling", () => {
     assert.deepEqual(response, { ok: true });
   });
 
-  it("inserts generated messages without sending them", () => {
-    const editor = {
-      tagName: "TEXTAREA",
-      value: "",
-      dispatchEvent() {},
-    };
-    const response = handleContentMessage(
-      { type: "LREACHOUT_INSERT_MESSAGE", message: "Hi Taylor" },
-      {
-        document: {
-          activeElement: editor,
-          defaultView: {
-            InputEvent: class InputEvent {
-              constructor(type) {
-                this.type = type;
-              }
-            },
-          },
-        },
-      },
-    );
-
-    assert.deepEqual(response, { ok: true, inserted: true });
-    assert.equal(editor.value, "Hi Taylor");
-  });
-
   it("copies generated messages via the async Clipboard API when available", async () => {
     const writes = [];
     const document = {

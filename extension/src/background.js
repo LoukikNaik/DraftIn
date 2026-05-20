@@ -1,6 +1,22 @@
 import { copyMessageToClipboard } from "./clipboard-output.js";
+import {
+  handleAddScreenshot,
+  handleClearBuffer,
+  handleDraft,
+} from "./draft.js";
 import { buildGeneratePayload } from "./invocation-payload.js";
+import {
+  appendScreenshot,
+  clearScreenshots,
+  getScreenshots,
+} from "./screenshot-buffer.js";
 import { generateMessage } from "./server-client.js";
+
+const BADGE_BACKGROUND = "#0a66c2";
+
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.action.setBadgeBackgroundColor({ color: BADGE_BACKGROUND });
+});
 
 chrome.action.onClicked.addListener((tab) => {
   console.info("[lreachout] toolbar clicked", tab?.url);
@@ -8,14 +24,70 @@ chrome.action.onClicked.addListener((tab) => {
 });
 
 chrome.commands.onCommand.addListener(async (command) => {
-  if (command !== "draft-linkedin-message") {
-    return;
-  }
-
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   console.info("[lreachout] command invoked", command, tab?.url);
-  await draftForTab(tab);
+
+  switch (command) {
+    case "draft-linkedin-message":
+      await draftForTab(tab);
+      return;
+    case "add-screenshot":
+      await addScreenshotForTab(tab);
+      return;
+    case "clear-screenshots":
+      await clearBuffer(tab);
+      return;
+    default:
+      console.warn("[lreachout] unknown command", command);
+  }
 });
+
+const buffer = {
+  append: (dataUrl) => appendScreenshot(dataUrl),
+  get: () => getScreenshots(),
+  clear: () => clearScreenshots(),
+};
+
+const setBadge = (text) => chrome.action.setBadgeText({ text });
+
+const captureViewport = (tab) =>
+  chrome.tabs.captureVisibleTab(tab.windowId, { format: "png" });
+
+async function addScreenshotForTab(tab) {
+  try {
+    if (!tab?.id) {
+      throw new Error("No active tab found");
+    }
+
+    await handleAddScreenshot({
+      tab,
+      capture: captureViewport,
+      buffer,
+      setBadge,
+    });
+
+    const count = (await buffer.get()).length;
+    console.info("[lreachout] screenshot added to buffer", { count });
+    await showFlash(tab.id, `Buffered screenshot ${count}`);
+  } catch (error) {
+    console.error("[lreachout] add-screenshot failed", error);
+    if (tab?.id) {
+      await showFlash(tab.id, `lreachout: ${error.message}`);
+    }
+  }
+}
+
+async function clearBuffer(tab) {
+  try {
+    await handleClearBuffer({ buffer, setBadge });
+    console.info("[lreachout] screenshot buffer cleared");
+    if (tab?.id) {
+      await showFlash(tab.id, "Screenshot buffer cleared");
+    }
+  } catch (error) {
+    console.error("[lreachout] clear-screenshots failed", error);
+  }
+}
 
 async function draftForTab(tab) {
   try {
@@ -27,29 +99,12 @@ async function draftForTab(tab) {
     await ensureContentScript(tab.id);
     await showStatus(tab.id, { status: "Drafting LinkedIn message..." });
 
-    const screenshotDataUrl = await chrome.tabs.captureVisibleTab(tab.windowId, {
-      format: "png",
-    });
-    console.info("[lreachout] captured screenshot", { bytes: screenshotDataUrl.length });
-    const payload = buildGeneratePayload({ tab, screenshotDataUrl });
-    console.info("[lreachout] sending payload to local server");
-    const result = await generateMessage({ payload });
-    console.info("[lreachout] received draft", { chars: result.message.length });
-    const offscreenCopy = await copyMessageViaOffscreen(result.message);
-    const clipboardResult = offscreenCopy.copied
-      ? { copied: true }
-      : await copyMessageToClipboard(result.message);
-    const pageCopyResult = clipboardResult.copied
-      ? { copied: true }
-      : await copyMessageInPage(tab.id, result.message);
-    const copied = offscreenCopy.copied || clipboardResult.copied || pageCopyResult.copied;
-    const insertion = await insertMessage(tab.id, result.message);
-
-    await showStatus(tab.id, {
-      message: result.message,
-      copied,
-      inserted: insertion.inserted,
-      error: copied ? undefined : offscreenCopy.error ?? clipboardResult.error,
+    await handleDraft({
+      tab,
+      capture: captureViewport,
+      buffer,
+      setBadge,
+      sendDraft: ({ tab: draftTab, screenshots }) => sendDraft(draftTab, screenshots),
     });
   } catch (error) {
     console.error("[lreachout] draft failed", error);
@@ -57,6 +112,29 @@ async function draftForTab(tab) {
       await showStatus(tab.id, { message: "", error: error.message });
     }
   }
+}
+
+async function sendDraft(tab, screenshots) {
+  console.info("[lreachout] preparing draft", { screenshotCount: screenshots.length });
+  const payload = buildGeneratePayload({ tab, screenshots });
+  console.info("[lreachout] sending payload to local server");
+  const result = await generateMessage({ payload });
+  console.info("[lreachout] received draft", { chars: result.message.length });
+
+  const offscreenCopy = await copyMessageViaOffscreen(result.message);
+  const clipboardResult = offscreenCopy.copied
+    ? { copied: true }
+    : await copyMessageToClipboard(result.message);
+  const pageCopyResult = clipboardResult.copied
+    ? { copied: true }
+    : await copyMessageInPage(tab.id, result.message);
+  const copied = offscreenCopy.copied || clipboardResult.copied || pageCopyResult.copied;
+
+  await showStatus(tab.id, {
+    message: result.message,
+    copied,
+    error: copied ? undefined : offscreenCopy.error ?? clipboardResult.error,
+  });
 }
 
 const OFFSCREEN_URL = "src/offscreen.html";
@@ -148,19 +226,6 @@ async function ensureContentScript(tabId) {
   console.info("[lreachout] content script injected");
 }
 
-async function insertMessage(tabId, message) {
-  try {
-    const response = await chrome.tabs.sendMessage(tabId, {
-      type: "LREACHOUT_INSERT_MESSAGE",
-      message,
-    });
-
-    return { inserted: Boolean(response?.inserted) };
-  } catch {
-    return { inserted: false };
-  }
-}
-
 async function showStatus(tabId, payload) {
   try {
     await chrome.tabs.sendMessage(tabId, {
@@ -169,6 +234,26 @@ async function showStatus(tabId, payload) {
     });
   } catch (error) {
     console.warn("[lreachout] could not show overlay", error);
-    // The overlay is best-effort. Clipboard remains the reliable output path.
+  }
+}
+
+async function showFlash(tabId, text) {
+  try {
+    await chrome.scripting.executeScript({
+      target: { tabId },
+      func: (status) => {
+        document.getElementById("lreachout-flash")?.remove();
+        const el = document.createElement("div");
+        el.id = "lreachout-flash";
+        el.textContent = status;
+        el.style.cssText =
+          "position:fixed;right:24px;bottom:24px;z-index:2147483647;padding:10px 14px;border-radius:10px;box-shadow:0 12px 32px rgba(0,0,0,.25);background:#102018;color:#f4fff8;font:13px/1.4 ui-sans-serif,system-ui,sans-serif;max-width:320px";
+        document.body.append(el);
+        setTimeout(() => el.remove(), 2500);
+      },
+      args: [text],
+    });
+  } catch {
+    // Unsupported page (chrome://, devtools, etc.) — badge is the canonical feedback.
   }
 }

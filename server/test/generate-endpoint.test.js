@@ -83,7 +83,7 @@ function validRequest() {
     url: "https://www.linkedin.com/in/taylor-recruiter/",
     title: "Taylor Recruiter | LinkedIn",
     intent: "Draft a concise LinkedIn reach-out message about hiring opportunities.",
-    screenshotDataUrl: "data:image/png;base64,iVBORw0KGgo=",
+    screenshots: ["data:image/png;base64,iVBORw0KGgo="],
   };
 }
 

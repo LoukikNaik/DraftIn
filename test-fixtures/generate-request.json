@@ -2,5 +2,5 @@
   "url": "https://www.linkedin.com/in/example/",
   "title": "Example Recruiter | LinkedIn",
   "intent": "Draft a concise LinkedIn reach-out message about hiring opportunities.",
-  "screenshotDataUrl": "data:image/png;base64,iVBORw0KGgo="
+  "screenshots": ["data:image/png;base64,iVBORw0KGgo="]
 }

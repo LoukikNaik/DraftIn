@@ -31,7 +31,26 @@ export function getOracleArgs(env = process.env) {
     return splitArgs(env.LREACHOUT_ORACLE_ARGS);
   }
 
-  return ["--engine", "browser", "--browser-hide-window", "--model", "gpt-5.5-instant", "--force"];
+  return [
+    "--engine",
+    "browser",
+    "--browser-hide-window",
+    "--model",
+    "gpt-5.5-instant",
+    "--force",
+    // Multi-screenshot prompts take longer; give Oracle headroom so it doesn't
+    // give up before the model finishes generating.
+    "--browser-timeout",
+    "5m",
+    "--browser-recheck-delay",
+    "30s",
+    "--browser-recheck-timeout",
+    "2m",
+    // Floor the "answer is stable" threshold so ChatGPT's mid-stream pauses
+    // (e.g., during image analysis) don't trip premature capture.
+    "--browser-min-stable-ms",
+    "15s",
+  ];
 }
 
 function splitArgs(value) {
