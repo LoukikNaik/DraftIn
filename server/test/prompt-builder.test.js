@@ -51,8 +51,8 @@ describe("prompt builder", () => {
 
     assert.match(prompt, /keeping this short/i);
     assert.match(prompt, /came across your/i);
-    assert.match(prompt, /2 or 3 bullets/i);
-    assert.match(prompt, /Based in the Bay Area/);
+    assert.match(prompt, /2 or 3 deep bullets/i);
+    assert.match(prompt, /- Based in the Bay Area\./);
     assert.match(prompt, /day one/i);
     assert.match(prompt, /across the stack/i);
   });
@@ -181,9 +181,10 @@ describe("prompt builder", () => {
       request: validRequest(),
     });
 
-    assert.match(prompt, /one-line context for someone who has no idea who I am/i);
-    assert.match(prompt, /Based in the Bay Area\. Spent the last year/);
-    // The intro must NOT lean on the company name as a load-bearing reference.
+    assert.match(prompt, /two short context bullets/i);
+    assert.match(prompt, /- Based in the Bay Area\./);
+    assert.match(prompt, /- Spent the last year \{/);
+    // The clause must NOT lean on the company name as a load-bearing reference.
     assert.match(prompt, /NOT using the company name/);
   });
 
