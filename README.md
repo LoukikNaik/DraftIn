@@ -161,7 +161,8 @@ The repository now contains a working local-first MVP skeleton:
 
 - `extension/` contains the Chrome Manifest V3 extension.
 - `server/` contains the localhost HTTP server and Oracle CLI runner.
-- `profile/me.md` contains the personal outreach context generated from Loukik's resume.
+- `profile/me.md` contains the personal outreach context ("about me") generated from Loukik's resume.
+- `prompts/` contains the playbooks that define the message itself; `prompts/hiring.md` is the default. See `prompts/README.md` to write your own (sales, fundraising, podcast invites, etc.).
 - `docs/tdd-plan.md` describes the test-first implementation plan.
 
 The extension flow is:
@@ -170,7 +171,7 @@ The extension flow is:
 2. Extract visible LinkedIn context from the active tab.
 3. Capture a screenshot of the visible tab.
 4. POST the context and screenshot to `http://127.0.0.1:17391/generate`.
-5. The server reads `profile/me.md`, builds a text prompt, and invokes `oracle`.
+5. The server reads `profile/me.md` (who you are) and the active playbook from `prompts/` (what kind of message), builds a text prompt, and invokes `oracle`.
 6. The extension copies the generated message to the clipboard.
 
 ## Setup
@@ -201,6 +202,7 @@ Optional environment variables:
 LREACHOUT_PORT=17391
 LREACHOUT_HOST=127.0.0.1
 LREACHOUT_PROFILE_PATH=profile/me.md
+LREACHOUT_PLAYBOOK_PATH=prompts/hiring.md
 LREACHOUT_ORACLE_ARGS="--engine browser --browser-model-strategy current"
 LREACHOUT_ATTACH_SCREENSHOT=true
 ```
@@ -249,5 +251,6 @@ When enabled, server logs should show `1 attachments`, and the Oracle command sh
 
 - Whether the local server should be Node.js, Python, or another runtime.
 - Whether screenshots should be sent to Oracle every time or only when DOM extraction is insufficient.
-- How much prompt history or examples should live in `profile/me.md` versus separate prompt templates.
 - Whether to use Chrome Native Messaging later for tighter browser-to-local communication.
+
+(Resolved: the message definition lives in swappable playbooks under `prompts/`, separate from `profile/me.md`. `LREACHOUT_PLAYBOOK_PATH` selects one.)
