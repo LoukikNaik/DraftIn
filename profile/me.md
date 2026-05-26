@@ -63,6 +63,16 @@ Relevant points:
 - Automated video inference workflows with Google Cloud Functions triggered by Google Cloud Storage uploads.
 - Deployed pipelines on Google Kubernetes Engine with CI/CD for scalable, reliable processing.
 
+## Side Projects (things I build outside work)
+
+Use these for the "outside work I'm always building" bullet. Pick the one most relevant to the recipient's domain, or the most impressive live one. Always include the link if there is one.
+
+- PodClipper (podclipper.loukik.dev) - local-first tool that turns long podcasts and videos into short AI-generated clips and highlights automatically: transcription, AI clip selection, smart cropping, subtitles.
+- LReachout (github.com/LoukikNaik/LReachout) - keyboard-driven LinkedIn reach-out drafter. Alt+L captures the page and drafts a personalized message via a local vision-LLM, routed through a ChatGPT subscription, no API key.
+- reelforge (github.com/LoukikNaik/reelforge) - multi-agent AI video editor that turns long-form videos into viral short-form reels.
+- Synapse (github.com/LoukikNaik/Synapse) - spaced repetition for decision-making; turns any book, video, or topic into scenario-based flashcards that test judgment.
+- F1-Prediction-Engine (github.com/LoukikNaik/F1-Prediction-Engine) - ensemble models, Monte Carlo simulations, and live race tracking for F1 predictions.
+
 ## Project Highlights
 
 ### Surfstore - Distributed File Storage System

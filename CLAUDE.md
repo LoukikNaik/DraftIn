@@ -84,6 +84,30 @@ Env vars (all optional):
 
 The screenshot is always attached. There is no opt-out flag, by design — the prompt assumes it.
 
+### Oracle invocation flags
+
+`server/src/config.js` builds the default Oracle args. The defaults run a hidden browser session against `gpt-5.5-instant` with generous timeouts, because each draft analyzes one or more screenshots and may **web-search the recipient's company** (the prompt asks the model to look the company up if it doesn't recognize it):
+
+```
+--engine browser --browser-hide-window --model gpt-5.5-instant --force
+--browser-timeout 10m --browser-recheck-delay 30s --browser-recheck-timeout 4m
+--browser-min-stable-ms 15s
+```
+
+- `--browser-timeout 10m` — overall ceiling for a single draft.
+- `--browser-recheck-timeout 4m` — how long to keep polling after the answer first appears.
+- `--browser-min-stable-ms 15s` — floors the "answer is stable" threshold so ChatGPT's mid-stream pauses (image analysis, search) don't trip premature capture.
+
+Setting `LREACHOUT_ORACLE_ARGS` **replaces this entire list** (it is not merged), so pass the full set when overriding — e.g. to raise the timeout further:
+
+```bash
+LREACHOUT_PROFILE_PATH=profile/me.md \
+LREACHOUT_ORACLE_ARGS="--engine browser --browser-hide-window --model gpt-5.5-instant --force --browser-timeout 15m --browser-recheck-delay 30s --browser-recheck-timeout 5m --browser-min-stable-ms 15s" \
+node server/src/index.js
+```
+
+If you change the defaults in `config.js`, update the assertion in `server/test/config.test.js` to match (it deep-equals the full arg array).
+
 ## Known footguns
 
 - Reloading the extension at `chrome://extensions` is not enough on its own; reload the LinkedIn tab too so a fresh content runtime is injected.
