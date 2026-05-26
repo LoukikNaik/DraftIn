@@ -19,7 +19,15 @@ LREACHOUT_PLAYBOOK_PATH=prompts/hiring.md node server/src/index.js
 LREACHOUT_PLAYBOOK_PATH=prompts/sales.md  node server/src/index.js
 ```
 
-## Writing your own
+## Fastest start: generate one from your past messages
+
+If you've used ChatGPT or Claude to draft outreach before, your voice is
+already in their memory. Open `extract-your-playbook.md`, paste its prompt into
+ChatGPT or Claude, and save the result as `prompts/<your-name>.md`. It
+reverse-engineers your opener, structure, tone, and banned phrases — using your
+real past messages as the examples — and emits a playbook in the format below.
+
+## Writing your own by hand
 
 1. Copy `hiring.md` to `prompts/<your-campaign>.md`.
 2. Rewrite it for the new reach-out. A good playbook covers:
