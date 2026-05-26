@@ -14,7 +14,7 @@ describe("prompt builder", () => {
     assert.match(prompt, /URL: https:\/\/www\.linkedin\.com\/in\/example-recruiter\//);
     assert.match(prompt, /Page title: Example Recruiter \| LinkedIn/);
     assert.match(prompt, /first name only/i);
-    assert.match(prompt, /100 to 150 words/);
+    assert.match(prompt, /150 to 200 words/);
     assert.match(prompt, /em dashes/);
     assert.match(prompt, /never invent/i);
     assert.match(prompt, /Return only the message body/);
@@ -43,18 +43,18 @@ describe("prompt builder", () => {
     assert.match(prompt, /in order/i);
   });
 
-  it("instructs the fixed template shape: opener, bulleted body, day-one closer", () => {
+  it("instructs the warm opener + five-bullet body + mission-tied closer shape", () => {
     const prompt = buildPrompt({
       personalContext: "Backend engineer.",
       request: validRequest(),
     });
 
-    assert.match(prompt, /keeping this short/i);
-    assert.match(prompt, /came across your/i);
-    assert.match(prompt, /2 or 3 deep bullets/i);
-    assert.match(prompt, /- Based in the Bay Area\./);
-    assert.match(prompt, /day one/i);
-    assert.match(prompt, /across the stack/i);
+    assert.match(prompt, /saw your \{hook\}/);
+    assert.match(prompt, /sounds like exactly the kind of/i);
+    assert.match(prompt, /A few things about me:/);
+    assert.match(prompt, /Exactly five bullets/i);
+    assert.match(prompt, /values, breadth, recent role, prior role, side project/);
+    assert.match(prompt, /Would love to chat about how I could contribute to the team\./);
   });
 
   it("embeds three few-shot example messages so the model has the voice", () => {
@@ -66,36 +66,46 @@ describe("prompt builder", () => {
     assert.match(prompt, /Example 1/);
     assert.match(prompt, /Example 2/);
     assert.match(prompt, /Example 3/);
-    assert.match(prompt, /Hey Priya, came across/);
-    assert.match(prompt, /Hi Jordan, came across/);
-    assert.match(prompt, /Hey Sam, came across/);
-    assert.match(prompt, /backend service at a legal AI startup \(Eudia\)/);
-    assert.match(prompt, /real-time segmentation APIs at Plainsight/);
+    assert.match(prompt, /Hey Tamir, saw your post/);
+    assert.match(prompt, /Hey Priya, saw your post/);
+    assert.match(prompt, /Hey Sam, saw Lumen's/);
+    assert.match(prompt, /Before that at Plainsight/);
+    assert.match(prompt, /PodClipper \(podclipper\.loukik\.dev\)/);
   });
 
-  it("provides three role-shaped examples that draw bullets from distinct slices of the profile", () => {
+  it("walks the bullets from values through breadth, both roles, and a side project", () => {
     const prompt = buildPrompt({
       personalContext: "Backend engineer.",
       request: validRequest(),
     });
 
-    // Routing block instructs the model to classify the role surface.
-    assert.match(prompt, /backend \/ platform \/ infra/i);
-    assert.match(prompt, /agentic \/ applied AI/i);
-    assert.match(prompt, /ML \/ MLOps \/ computer vision/i);
-    assert.match(prompt, /Do not blend slices/i);
+    assert.match(prompt, /VALUES/);
+    assert.match(prompt, /BREADTH/);
+    assert.match(prompt, /RECENT ROLE/);
+    assert.match(prompt, /PRIOR ROLE/);
+    assert.match(prompt, /SIDE PROJECT/);
 
-    // Each example is labeled with its bucket so the model sees the routing demo.
-    assert.match(prompt, /Example 1 — BACKEND/);
-    assert.match(prompt, /Example 2 — AGENTIC/);
-    assert.match(prompt, /Example 3 — ML \/ MLOps/);
+    // Recent employer stays unnamed; Plainsight is named.
+    assert.match(prompt, /Keep `a Legal AI startup` unnamed/);
+    assert.match(prompt, /Name `Plainsight`/);
 
-    // The agentic example leans on agent-specific facts, not generic backend plumbing.
-    assert.match(prompt, /off Airflow onto Temporal/i);
+    // Breadth bullet always grounds in the Bay Area + AI startups.
+    assert.match(prompt, /AI startups in the Bay Area/);
+  });
 
-    // The ML example pulls Plainsight-only facts.
-    assert.match(prompt, /OCR evaluation framework/);
-    assert.match(prompt, /Vertex AI/);
+  it("tailors the message to the role's emphasis without changing the shape", () => {
+    const prompt = buildPrompt({
+      personalContext: "Backend engineer.",
+      request: validRequest(),
+    });
+
+    assert.match(prompt, /role's emphasis/i);
+    assert.match(prompt, /It does NOT change the overall shape/);
+
+    // The three examples cover distinct role surfaces.
+    assert.match(prompt, /Example 1 — FULL-STACK/);
+    assert.match(prompt, /Example 2 — BACKEND/);
+    assert.match(prompt, /Example 3 — ML \/ CV/);
   });
 
   it("bans the AI-template phrases the user flagged as fake", () => {
@@ -107,15 +117,23 @@ describe("prompt builder", () => {
     // Each phrase appears inside the "banned phrases" list, so the prompt
     // text itself should contain them (as forbidden examples).
     assert.match(prompt, /this really stood out to me/i);
-    assert.match(prompt, /this is the kind of work i have been looking for/i);
     assert.match(prompt, /to be honest/i);
     assert.match(prompt, /i was impressed by your background/i);
-    assert.match(prompt, /here's what i've done/i);
     assert.match(prompt, /i would be a great fit because/i);
+  });
 
-    // "came across" is the new opener — it must not appear in the banned list.
+  it("does not blacklist phrases the user wants to keep available", () => {
+    const prompt = buildPrompt({
+      personalContext: "Backend engineer.",
+      request: validRequest(),
+    });
+
+    // Pull the banned-phrases block out of the prompt and assert these
+    // phrases are NOT in the banned section. The phrases themselves do
+    // appear elsewhere in the prompt, which is fine.
     const bannedBlock = extractSection(prompt, "## Banned phrases", "##");
-    assert.doesNotMatch(bannedBlock, /came across/i);
+    assert.doesNotMatch(bannedBlock, /would love to chat/i);
+    assert.doesNotMatch(bannedBlock, /exactly the kind of/i);
   });
 
   it("uses standard punctuation and proper capitalization, not enforced lowercase", () => {
@@ -127,65 +145,29 @@ describe("prompt builder", () => {
     // No instruction that forces everything to lowercase.
     assert.doesNotMatch(prompt, /lowercase throughout/i);
     assert.doesNotMatch(prompt, /lowercase greeting/i);
-    assert.doesNotMatch(prompt, /lowercase product and library names/i);
 
     // Greetings in the examples use proper case.
-    assert.match(prompt, /Hey Priya, came across/);
-    assert.match(prompt, /Hi Jordan, came across/);
-    assert.match(prompt, /Hey Sam, came across/);
+    assert.match(prompt, /Hey Tamir, saw your post/);
+    assert.match(prompt, /Hey Priya, saw your post/);
+    assert.match(prompt, /Hey Sam, saw Lumen's/);
 
-    // Proper-noun product/company names keep conventional casing in the examples.
-    assert.match(prompt, /\(Eudia\)/);
+    // Proper-noun product/company names keep conventional casing.
     assert.match(prompt, /at Plainsight/);
-
-    // Closing tag is capitalized.
-    assert.match(prompt, /I've worked across the stack/);
 
     // Positive guidance for how to capitalize is in the prompt.
     assert.match(prompt, /standard sentence capitalization/i);
   });
 
-  it("does not blacklist phrases the user wants to keep available", () => {
+  it("keeps the bullets warm and human, not JD comma-soup", () => {
     const prompt = buildPrompt({
       personalContext: "Backend engineer.",
       request: validRequest(),
     });
 
-    // Pull the banned-phrases block out of the prompt and assert these
-    // phrases are NOT in the banned section. The phrases themselves do
-    // appear elsewhere in the prompt (in the examples and template), which
-    // is fine — the assertion is specifically about the banned list.
-    const bannedBlock = extractSection(prompt, "## Banned phrases", "##");
-    assert.doesNotMatch(bannedBlock, /love what you're building/i);
-    assert.doesNotMatch(bannedBlock, /would love to chat/i);
-    assert.doesNotMatch(bannedBlock, /would love to connect/i);
-  });
-
-  it("teaches the model to write human bullets, not JD comma-soup", () => {
-    const prompt = buildPrompt({
-      personalContext: "Backend engineer.",
-      request: validRequest(),
-    });
-
-    assert.match(prompt, /25 to 45 words/);
-    assert.match(prompt, /One idea per bullet/);
-    assert.match(prompt, /At most TWO technologies per bullet/);
-    assert.match(prompt, /Vary shape/);
-    assert.match(prompt, /coffee describing the work/i);
-    assert.match(prompt, /NEVER heard of Eudia/);
-  });
-
-  it("requires a one-line Bay Area intro that orients a stranger before the bullets", () => {
-    const prompt = buildPrompt({
-      personalContext: "Backend engineer.",
-      request: validRequest(),
-    });
-
-    assert.match(prompt, /two short context bullets/i);
-    assert.match(prompt, /- Based in the Bay Area\./);
-    assert.match(prompt, /- Spent the last year \{/);
-    // The clause must NOT lean on the company name as a load-bearing reference.
-    assert.match(prompt, /NOT using the company name/);
+    assert.match(prompt, /15 to 35 words/);
+    assert.match(prompt, /Conversational, first person/i);
+    assert.match(prompt, /no insider jargon/i);
+    assert.match(prompt, /genuinely love/i);
   });
 
   it("forbids image generation so Oracle never produces a visual asset", () => {
@@ -194,9 +176,9 @@ describe("prompt builder", () => {
       request: validRequest(),
     });
 
-    assert.match(prompt, /Output text ONLY/);
-    assert.match(prompt, /Do not generate.*image/i);
-    assert.match(prompt, /do not call it/i);
+    assert.match(prompt, /Text only/i);
+    assert.match(prompt, /do not generate any image/i);
+    assert.match(prompt, /do not call any image-generation tool/i);
   });
 
   it("falls back to title + URL guidance when no screenshot is attached", () => {
