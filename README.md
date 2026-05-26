@@ -176,6 +176,17 @@ The extension flow is:
 
 ## Setup
 
+### Make it yours (with AI)
+
+lreachout reads two files: `profile/me.md` (who you are) and a playbook in `prompts/` (what kind of message). You don't have to write either by hand — two paste-in prompts generate them from what you already have:
+
+- **Profile** — paste [`prompts/extract-your-profile.md`](prompts/extract-your-profile.md) into ChatGPT or Claude with your resume/LinkedIn; save the result as `profile/me.md`.
+- **Playbook** — paste [`prompts/extract-your-playbook.md`](prompts/extract-your-playbook.md) into the assistant you've drafted outreach with; it reverse-engineers your voice from past messages and emits a playbook. Save it under `prompts/` and point `LREACHOUT_PLAYBOOK_PATH` at it (defaults to `prompts/hiring.md`).
+
+Both outputs are meant to be refined by hand afterward.
+
+### Install and run
+
 Install Oracle separately and make sure the `oracle` command is available on your `PATH`:
 
 ```bash

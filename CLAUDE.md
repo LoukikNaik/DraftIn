@@ -29,6 +29,9 @@ prompts/hiring.md        The default PLAYBOOK: defines the message itself (shape
                          tone, banned phrases) for a hiring reach-out. Copy it to make new
                          playbooks (sales, fundraising, podcast invites, ...) and point
                          LREACHOUT_PLAYBOOK_PATH at the copy. Profile = who you are; playbook = what kind of message.
+prompts/extract-your-profile.md   Paste-in meta-prompt: have ChatGPT/Claude build profile/me.md from a resume.
+prompts/extract-your-playbook.md  Paste-in meta-prompt: reverse-engineer a playbook from the user's past outreach.
+prompts/README.md        How playbooks work and how to author one (by hand or via the meta-prompts).
 extension/manifest.json  MV3 manifest. Single content script + service worker + offscreen helper. Commands: Alt+L draft, Alt+K add-screenshot, Alt+C clear-screenshots.
 extension/src/           Background worker, draft orchestrator, screenshot buffer, content runtime, payload builder, HTTP client, offscreen clipboard fallback.
 extension/src/draft.js   Pure orchestrator: handleAddScreenshot, handleClearBuffer, handleDraft. All chrome.* deps injected for testability.
