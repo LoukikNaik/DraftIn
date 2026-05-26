@@ -20,6 +20,7 @@ describe("screenshot file handling", () => {
     let screenshotPath;
     const service = createGenerationService({
       profilePath,
+      playbookPath: "prompts/hiring.md",
       tempDir: dir,
       attachScreenshot: true,
       oracleRunner: {
@@ -44,6 +45,7 @@ describe("screenshot file handling", () => {
     let capturedPaths;
     const service = createGenerationService({
       profilePath,
+      playbookPath: "prompts/hiring.md",
       tempDir: dir,
       attachScreenshot: true,
       oracleRunner: {
@@ -77,6 +79,7 @@ describe("screenshot file handling", () => {
     let capturedPaths;
     const service = createGenerationService({
       profilePath,
+      playbookPath: "prompts/hiring.md",
       tempDir: dir,
       attachScreenshot: true,
       oracleRunner: {
@@ -110,6 +113,7 @@ describe("screenshot file handling", () => {
     let called = false;
     const service = createGenerationService({
       profilePath,
+      playbookPath: "prompts/hiring.md",
       tempDir: dir,
       attachScreenshot: true,
       oracleRunner: {

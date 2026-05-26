@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { buildGeneratePayload } from "../src/invocation-payload.js";
+import { buildGeneratePayload, defaultIntent } from "../src/invocation-payload.js";
 
 describe("extension invocation payload", () => {
   it("builds the server request shape with an ordered screenshots array", () => {
@@ -23,8 +23,13 @@ describe("extension invocation payload", () => {
         "data:image/png;base64,AAA",
         "data:image/png;base64,BBB",
       ],
-      intent: "Draft a concise LinkedIn reach-out message about hiring opportunities.",
+      intent: defaultIntent,
     });
+  });
+
+  it("defaults to a playbook-agnostic intent, not a hiring-specific one", () => {
+    assert.doesNotMatch(defaultIntent, /hiring/i);
+    assert.match(defaultIntent, /playbook/i);
   });
 
   it("rejects invocation without an active tab URL", () => {

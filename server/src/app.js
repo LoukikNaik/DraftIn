@@ -17,6 +17,7 @@ export function createHandler(options = {}) {
     options.generate ??
     createGenerationService({
       profilePath: options.profilePath ?? "profile/me.md",
+      playbookPath: options.playbookPath ?? "prompts/hiring.md",
       oracleRunner: options.oracleRunner,
       attachScreenshot: options.attachScreenshot,
       logger,

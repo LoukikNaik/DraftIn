@@ -1,4 +1,5 @@
-export const defaultIntent = "Draft a concise LinkedIn reach-out message about hiring opportunities.";
+export const defaultIntent =
+  "Draft a reach-out message to the person in the screenshots, following the configured playbook.";
 
 export function buildGeneratePayload({ tab, screenshots, intent = defaultIntent }) {
   if (!tab?.url) {

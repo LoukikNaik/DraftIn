@@ -20,6 +20,7 @@ describe("generation service", () => {
     const calls = [];
     const service = createGenerationService({
       profilePath,
+      playbookPath: "prompts/hiring.md",
       attachScreenshot: false,
       oracleRunner: {
         async run(input) {
@@ -36,7 +37,16 @@ describe("generation service", () => {
     assert.equal(calls.length, 1);
     assert.match(calls[0].prompt, /I build recruiting workflow tools/);
     assert.match(calls[0].prompt, /taylor-recruiter/);
+    // The configured playbook is injected into the prompt.
+    assert.match(calls[0].prompt, /A few things about me:/);
     assert.deepEqual(calls[0].attachments, []);
+  });
+
+  it("requires a playbookPath", () => {
+    assert.throws(
+      () => createGenerationService({ profilePath: "profile/me.md" }),
+      /requires playbookPath/,
+    );
   });
 
   it("creates one Oracle attachment per screenshot URL in the request", async () => {
@@ -46,6 +56,7 @@ describe("generation service", () => {
     const calls = [];
     const service = createGenerationService({
       profilePath,
+      playbookPath: "prompts/hiring.md",
       tempDir: dir,
       oracleRunner: {
         async run(input) {
@@ -73,6 +84,7 @@ describe("generation service", () => {
     await writeFile(profilePath, "Backend engineer.", "utf8");
     const service = createGenerationService({
       profilePath,
+      playbookPath: "prompts/hiring.md",
       attachScreenshot: false,
       oracleRunner: {
         async run() {
@@ -99,6 +111,7 @@ describe("generation service", () => {
     await writeFile(profilePath, "I build recruiting workflow tools.", "utf8");
     const service = createGenerationService({
       profilePath,
+      playbookPath: "prompts/hiring.md",
       attachScreenshot: false,
       oracleRunner: {
         async run() {

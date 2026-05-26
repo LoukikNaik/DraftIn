@@ -1,9 +1,11 @@
 import { loadPersonalContext } from "./personal-context.js";
+import { loadPlaybook } from "./playbook.js";
 import { buildPrompt } from "./prompt-builder.js";
 import { cleanupAttachments, createScreenshotAttachment } from "./screenshot-files.js";
 
 export function createGenerationService({
   profilePath,
+  playbookPath,
   oracleRunner,
   tempDir,
   attachScreenshot = true,
@@ -13,11 +15,18 @@ export function createGenerationService({
     throw new Error("createGenerationService requires profilePath");
   }
 
+  if (!playbookPath) {
+    throw new Error("createGenerationService requires playbookPath");
+  }
+
   const runner = oracleRunner ?? defaultOracleRunner;
 
   return async function generate(request) {
-    logger.info?.("[lreachout] loading personal context");
-    const personalContext = await loadPersonalContext(profilePath);
+    logger.info?.("[lreachout] loading personal context and playbook");
+    const [personalContext, playbook] = await Promise.all([
+      loadPersonalContext(profilePath),
+      loadPlaybook(playbookPath),
+    ]);
     const screenshots = Array.isArray(request.screenshots) ? request.screenshots : [];
     const attachments = attachScreenshot
       ? await Promise.all(
@@ -27,6 +36,7 @@ export function createGenerationService({
     logger.info?.("[lreachout] building Oracle prompt");
     const prompt = buildPrompt({
       personalContext,
+      playbook,
       request,
       hasScreenshot: attachments.length > 0,
     });
