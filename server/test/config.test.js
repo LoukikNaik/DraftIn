@@ -17,11 +17,13 @@ describe("server config", () => {
       "gpt-5.5-instant",
       "--force",
       "--browser-timeout",
-      "5m",
+      "10m",
       "--browser-recheck-delay",
       "30s",
       "--browser-recheck-timeout",
-      "2m",
+      "4m",
+      "--browser-min-stable-ms",
+      "15s",
     ]);
   });
 
