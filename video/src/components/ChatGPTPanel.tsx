@@ -2,9 +2,9 @@ import React from 'react'
 import { interpolate, useCurrentFrame, useVideoConfig } from 'remotion'
 import { colors, fonts } from '../theme'
 
-const FULL_REPLY = `Hey Priya — saw the Search Infra hiring post.
+const FULL_REPLY = `Hey Priya, saw the Search Infra hiring post.
 
-Spent the last 5 years on backend search/storage at Rubrik. Most relevant to what you're describing: cut p99 on a metadata hot path from 1.2s → 280ms by reshaping the index. No planner rewrite, shipped at full traffic, no rollback.
+Spent the last 5 years on backend search and storage at Vellum. Most relevant to what you are describing: cut p99 on a metadata hot path from 1.2s to 280ms by reshaping the index. No planner rewrite. Shipped at full traffic. No rollback.
 
 Resume and a short writeup of the fix below. Happy to chat whenever works for you.`
 
@@ -45,13 +45,108 @@ const CGLogo: React.FC<{ size?: number }> = ({ size = 22 }) => (
   </svg>
 )
 
+// Pasted personal-context card (mimics ChatGPT's "paste-as-text" cell).
+// Makes it visible that the draft is grounded in real me.md content,
+// not hallucinated.
+const ME_MD_CONTENT = `# me.md
+# Loukik. Backend engineer, 5 yrs on search and storage infra at Vellum.
+# Most recently on the metadata path team.
+
+## What I have shipped that I am proud of
+- Cut p99 on the metadata hot path from 1.2s to 280ms by reshaping the
+  index. No planner rewrite. Full traffic. Zero rollback.
+- Built the migration tool that moved 14B rows off a legacy shard layout
+  over a weekend, zero downtime.
+- Mentor 3-5 newer engineers. Two of them got promoted to senior in
+  their first review cycle.
+
+## What I want next
+- Backend IC (not management) where I can keep going deep on storage
+  or search at scale.
+- Small team. Strong eng culture. "Shipped under load" is the bar.
+- Real users. Not pre-product.
+
+## What I look for in a team
+- Concrete technical problems. Not "build a platform from scratch".
+- People who write clearly. I learn faster from them.
+- Honest postmortems.
+
+## Tone for outreach (important)
+- Warm. Specific. No buzzwords.
+- Lead with relevance to them, not the ask.
+- Three short paragraphs max.
+- Always include a concrete proof point from my own work.
+- Never use "would love to compare notes", "circle back", "synergy".
+- Never reference reading their profile. Assume they know I did.
+- Sign-off: friendly, not formal.
+
+## Logistics
+- Open to remote, hybrid SF, or moving for the right thing.
+- Resume: loukik.dev/resume.pdf
+- GitHub: github.com/loukiknaik`
+
+const ME_MD_LINE_COUNT = ME_MD_CONTENT.split('\n').length
+
+const PastedMeMdCard: React.FC = () => (
+  <div style={{
+    width: 540,
+    background: '#2A2A2A',
+    border: '1px solid rgba(255,255,255,0.08)',
+    borderRadius: 12,
+    padding: '12px 14px 14px',
+    color: '#ECECEC',
+    position: 'relative',
+    overflow: 'hidden',
+    maxHeight: 200,
+  }}>
+    <div style={{
+      display: 'flex', alignItems: 'center', gap: 8,
+      paddingBottom: 8,
+      borderBottom: '1px solid rgba(255,255,255,0.08)',
+      marginBottom: 8,
+      fontFamily: fonts.sans,
+      fontSize: 12,
+      color: 'rgba(255,255,255,0.7)',
+    }}>
+      <span style={{
+        display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+        width: 18, height: 18,
+        background: 'rgba(255,255,255,0.08)',
+        borderRadius: 4,
+        fontSize: 11,
+      }}>📄</span>
+      <span style={{ fontWeight: 700, color: '#fff' }}>Pasted</span>
+      <span style={{ color: 'rgba(255,255,255,0.5)' }}>me.md</span>
+      <span style={{ marginLeft: 'auto', fontSize: 11, color: 'rgba(255,255,255,0.5)' }}>
+        {ME_MD_LINE_COUNT} lines
+      </span>
+    </div>
+    <pre style={{
+      margin: 0,
+      whiteSpace: 'pre-wrap',
+      fontFamily: fonts.mono,
+      fontSize: 10.5,
+      lineHeight: 1.5,
+      color: 'rgba(255,255,255,0.82)',
+    }}>{ME_MD_CONTENT}</pre>
+    {/* fade at the bottom to suggest more content */}
+    <div style={{
+      position: 'absolute',
+      left: 0, right: 0, bottom: 0,
+      height: 56,
+      background: 'linear-gradient(180deg, rgba(42,42,42,0) 0%, #2A2A2A 85%)',
+      pointerEvents: 'none',
+    }} />
+  </div>
+)
+
 export const ChatGPTPanel: React.FC<{ revealFrom?: number; copiedToastFrom?: number }> = ({
   revealFrom = 0, copiedToastFrom,
 }) => {
   const frame = useCurrentFrame()
   const { fps } = useVideoConfig()
 
-  // Stream typewriter — reveal characters over time
+  // Stream typewriter - reveal characters over time
   const streamStart = revealFrom + 24
   const streamDuration = 150
   const charsTotal = FULL_REPLY.length
@@ -116,7 +211,7 @@ export const ChatGPTPanel: React.FC<{ revealFrom?: number; copiedToastFrom?: num
           Outreach to Priya Shah
         </div>
         <div style={{ padding: '9px 12px', borderRadius: 7, color: 'rgba(255,255,255,0.72)' }}>
-          Notion search infra notes
+          Helix search infra notes
         </div>
         <div style={{ padding: '10px 12px 4px', fontSize: 11, fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)' }}>Yesterday</div>
         <div style={{ padding: '9px 12px', borderRadius: 7, color: 'rgba(255,255,255,0.72)' }}>
@@ -146,6 +241,7 @@ export const ChatGPTPanel: React.FC<{ revealFrom?: number; copiedToastFrom?: num
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 18, paddingTop: 12, overflow: 'hidden' }}>
           {/* User message */}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 10 }}>
+            <PastedMeMdCard />
             <div style={{ display: 'flex', gap: 8 }}>
               <PageThumb tint={colors.brandDeep} initial="PS" />
               <PageThumb tint="#084E97" initial="PS" />
@@ -160,7 +256,9 @@ export const ChatGPTPanel: React.FC<{ revealFrom?: number; copiedToastFrom?: num
               lineHeight: 1.55,
               color: '#ECECEC',
             }}>
-              Draft a warm intro from me to this person, grounded in what's on the page.
+              Use me.md above as my voice. Read the screenshots.
+              Draft a warm intro to this person. Every line grounded in
+              the page or in me.md. Do not invent.
             </div>
           </div>
 

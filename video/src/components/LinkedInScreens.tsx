@@ -37,7 +37,7 @@ export const HiringPostScreen: React.FC = () => (
               Priya Shah <span style={{ fontWeight: 400, fontSize: 14, color: colors.textMuted }}>· 2nd</span>
             </div>
             <div style={{ fontSize: 13, color: colors.textMuted, marginTop: 2, lineHeight: 1.35 }}>
-              Eng Manager · Search Infra @ Notion · ex-Stripe
+              Eng Manager · Search Infra at Helix · ex-Pier
             </div>
             <div style={{ fontSize: 12, color: colors.textMuted, marginTop: 4 }}>3d · 🌐</div>
           </div>
@@ -46,10 +46,10 @@ export const HiringPostScreen: React.FC = () => (
 
         {/* Post body */}
         <div style={{ padding: '4px 18px 14px', fontSize: 15, lineHeight: 1.55, color: colors.text }}>
-          <p style={{ margin: 0 }}><strong>We're hiring 2 backend ICs on the Notion Search Infra team.</strong></p>
+          <p style={{ margin: 0 }}><strong>We are hiring 2 backend engineers on the Helix Search Infra team.</strong></p>
           <p style={{ marginTop: 10, marginBottom: 0 }}>
-            If you've shipped narrow, surgical wins on a hot path — index reshapes,
-            query rewrites, p99 cuts under real load — I want to talk to you. DMs open.
+            If you have shipped narrow, surgical wins on a hot path (index reshapes,
+            query rewrites, p99 cuts under real load), I want to talk. DMs open.
             Reposts appreciated 🙏
           </p>
         </div>
@@ -98,7 +98,7 @@ export const HiringPostScreen: React.FC = () => (
   </div>
 )
 
-// ── Profile top — Priya's profile head section ────────────────────
+// ── Profile top - Priya's profile head section ────────────────────
 export const ProfileTopScreen: React.FC = () => (
   <div style={{
     width: '100%', height: '100%',
@@ -141,7 +141,7 @@ export const ProfileTopScreen: React.FC = () => (
           </div>
 
           <p style={{ margin: '6px 0 0', fontSize: 16, color: colors.text }}>
-            Engineering Manager, Search Infra @ Notion · ex-Stripe
+            Engineering Manager, Search Infra at Helix. Previously at Pier.
           </p>
           <p style={{ margin: '6px 0 0', fontSize: 13, color: colors.textMuted }}>
             San Francisco, California · <span style={{ color: colors.brand, fontWeight: 600 }}>Contact info</span>
@@ -181,8 +181,8 @@ export const ProfileTopScreen: React.FC = () => (
         <div style={{ borderTop: `1px solid ${colors.liBorder}`, padding: '18px 24px' }}>
           <h5 style={{ margin: 0, fontWeight: 700, fontSize: 18, color: colors.text }}>About</h5>
           <p style={{ margin: '10px 0 0', fontSize: 14, color: colors.text, lineHeight: 1.55 }}>
-            I lead Search Infrastructure at Notion. Recently shipped the workspace-wide
-            search rewrite — cut p99 from 1.8s to 350ms without touching the query…
+            I lead Search Infrastructure at Helix. We recently shipped the workspace
+            search rewrite and cut p99 from 1.8s to 350ms without touching the query…
             <span style={{ color: colors.textMuted, fontWeight: 600 }}> see more</span>
           </p>
         </div>
@@ -191,7 +191,7 @@ export const ProfileTopScreen: React.FC = () => (
   </div>
 )
 
-// ── Profile experience — scrolled down ────────────────────────────
+// ── Profile experience - scrolled down ────────────────────────────
 export const ProfileExpScreen: React.FC = () => (
   <div style={{
     width: '100%', height: '100%',
@@ -211,7 +211,7 @@ export const ProfileExpScreen: React.FC = () => (
       }}>
         <h5 style={{ margin: 0, fontWeight: 700, fontSize: 22, color: colors.text }}>Experience</h5>
 
-        {/* Entry 1: Notion */}
+        {/* Entry 1: Helix */}
         <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: 16, marginTop: 22 }}>
           <div style={{
             width: 60, height: 60,
@@ -225,10 +225,10 @@ export const ProfileExpScreen: React.FC = () => (
               Engineering Manager, Search Infrastructure
             </div>
             <div style={{ fontSize: 14, color: colors.text, marginTop: 2 }}>
-              Notion · Full-time
+              Helix · Full-time
             </div>
             <div style={{ fontSize: 13, color: colors.textMuted, marginTop: 2 }}>
-              Mar 2022 – Present · 3 yrs 3 mos
+              Mar 2022 to Present · 3 yrs 3 mos
             </div>
             <div style={{ fontSize: 13, color: colors.textMuted, marginTop: 2 }}>
               San Francisco, California
@@ -238,7 +238,7 @@ export const ProfileExpScreen: React.FC = () => (
 
         <div style={{ height: 1, background: 'rgba(0,0,0,0.08)', margin: '20px 0' }} />
 
-        {/* Entry 2: Stripe */}
+        {/* Entry 2: Pier */}
         <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: 16 }}>
           <div style={{
             width: 60, height: 60,
@@ -252,10 +252,10 @@ export const ProfileExpScreen: React.FC = () => (
               Senior Software Engineer
             </div>
             <div style={{ fontSize: 14, color: colors.text, marginTop: 2 }}>
-              Stripe · Full-time
+              Pier · Full-time
             </div>
             <div style={{ fontSize: 13, color: colors.textMuted, marginTop: 2 }}>
-              Jul 2018 – Mar 2022 · 3 yrs 9 mos
+              Jul 2018 to Mar 2022 · 3 yrs 9 mos
             </div>
           </div>
         </div>

@@ -11,19 +11,19 @@ import { useEffect } from 'react'
 const CARDS = [
   {
     name: 'Priya Shah',
-    headline: 'Eng Manager · Search · Notion',
+    headline: 'Eng Manager · Search · Helix',
     tint: '#0A66C2',
     avatar: 'PS',
   },
   {
     name: 'Staff Eng · ML Infra',
-    headline: 'Cursor · Remote · 2d ago',
+    headline: 'Forge · Remote · 2d ago',
     tint: '#0E0E10',
     avatar: 'C',
   },
   {
     name: 'Marc Tien',
-    headline: 'Co-founder · Bend (YC W24)',
+    headline: 'Co-founder · Pavilion (YC W24)',
     tint: '#084E97',
     avatar: 'MT',
   },

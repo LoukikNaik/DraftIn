@@ -51,7 +51,7 @@ export const Act1Capture: React.FC = () => {
         {/* Alt+K keystroke pill */}
         <KbdBadge keys={['Alt', 'K']} startFrame={idx * PER + KBD_IN} endFrame={idx * PER + KBD_OUT} bottom={64} right={64} />
 
-        {/* Persistent queue badge — bumps at flash */}
+        {/* Persistent queue badge - bumps at flash */}
         <QueueBadge count={queueCount} bumpFrame={idx * PER + FLASH_AT} />
 
         {/* Step caption */}

@@ -2,9 +2,9 @@ import React from 'react'
 import { interpolate, spring, useCurrentFrame, useVideoConfig } from 'remotion'
 import { colors, fonts } from '../theme'
 
-const DRAFTED = `Hey Priya — saw the Search Infra hiring post.
+const DRAFTED = `Hey Priya, saw the Search Infra hiring post.
 
-Spent the last 5 years on backend search/storage at Rubrik. Most relevant to what you're describing: cut p99 on a metadata hot path from 1.2s → 280ms by reshaping the index. No planner rewrite, shipped at full traffic, no rollback.
+Spent the last 5 years on backend search and storage at Vellum. Most relevant to what you are describing: cut p99 on a metadata hot path from 1.2s to 280ms by reshaping the index. No planner rewrite. Shipped at full traffic. No rollback.
 
 Resume and a short writeup of the fix below. Happy to chat whenever works for you.`
 
@@ -116,7 +116,7 @@ export const DMPanel: React.FC<Props> = ({ pasteFrom, sendFrom, deliveredFrom })
           <div style={{ fontSize: 11, color: colors.textFaint, paddingLeft: 6, marginTop: 4 }}>10:42 AM</div>
         </div>
 
-        {/* Outbound sent bubble — appears after send */}
+        {/* Outbound sent bubble - appears after send */}
         {sent && (
           <div style={{
             display: 'flex', flexDirection: 'column', alignItems: 'flex-end',

@@ -59,11 +59,18 @@ const ArrowRight = () => (
   </svg>
 )
 
-// ── Brand mark (LinkedIn-style "in" tile) ────────────────────────
+// ── Brand mark (fountain-pen nib in a brand-blue tile) ──────────
 const BrandMark = ({ size = 22 }) => (
   <svg width={size} height={size} viewBox="0 0 128 128" aria-hidden>
-    <rect width="128" height="128" rx="24" fill="#0A66C2"/>
-    <text x="64" y="94" fontFamily="'Source Sans 3', -apple-system, sans-serif" fontWeight="900" fontSize="92" letterSpacing="-3" fill="#FFFFFF" textAnchor="middle">in</text>
+    <rect width="128" height="128" rx="26" fill="#0A66C2"/>
+    <g transform="translate(64 64)">
+      <path
+        d="M 0 -46 C -14 -46 -20 -40 -20 -30 L -20 16 Q -20 19 -18 21 L 0 46 L 18 21 Q 20 19 20 16 L 20 -30 C 20 -40 14 -46 0 -46 Z"
+        fill="#FFFFFF"
+      />
+      <line x1="0" y1="-16" x2="0" y2="40" stroke="#0A66C2" strokeWidth="2.6" strokeLinecap="round"/>
+      <circle cx="0" cy="-20" r="3.8" fill="#0A66C2"/>
+    </g>
   </svg>
 )
 
@@ -106,11 +113,11 @@ function Hero() {
           Cold outreach. <span className="hero-highlight">One keystroke.</span>
         </h1>
         <p className="hero-p">
-          Open a LinkedIn profile or a JD. Hit <kbd>Alt+L</kbd>.
-          DraftIn screenshots the page, hands it to GPT, and lands a
-          personalized message on your clipboard. Paste with <kbd>⌘V</kbd>.
-          Routed through your existing ChatGPT subscription, so no paid
-          API key, and it runs entirely on your machine.
+          Open any LinkedIn page. Press <kbd>Alt+L</kbd>. Paste a personalized
+          message into the DM with <kbd>⌘V</kbd>. DraftIn reads the screen,
+          writes the message in your voice, and lands it on your clipboard.
+          It runs through your existing ChatGPT subscription. No API keys.
+          No SaaS dashboard. No copy paste from another tab.
         </p>
         <div className="hero-ctas">
           <a href={GH} className="btn-primary" target="_blank" rel="noopener noreferrer">
@@ -128,10 +135,10 @@ function Hero() {
 
 // ── Stats bar ────────────────────────────────────────────────────
 const STATS = [
-  { n: 1,   suffix: '',  label: 'Keystroke to draft a message' },
-  { n: 0,   suffix: '',  label: 'API keys required' },
-  { n: 100, suffix: '%', label: 'Local. Your ChatGPT, your machine' },
-  { n: 3,   suffix: '+', label: 'Pages combinable per draft' },
+  { n: 1,   suffix: '',  label: 'Keystroke from page to draft' },
+  { n: 0,   suffix: '',  label: 'API keys needed' },
+  { n: 100, suffix: '%', label: 'On your machine' },
+  { n: 3,   suffix: '+', label: 'Pages per draft' },
 ]
 
 function StatsBar() {
@@ -403,27 +410,27 @@ function ExampleRow({ children, draft, subject, label, delay = 0 }) {
 
 // ── Demo section data ─────────────────────────────────────────────
 const PRIYA_DRAFT = [
-  "Hey Priya — saw the Search Infra hiring post.",
+  "Hey Priya, saw the Search Infra hiring post.",
   "",
-  "Spent the last 5 years on backend search/storage at Rubrik. Most",
-  "relevant to what you're describing: cut p99 on a metadata hot path",
-  "from 1.2s → 280ms by reshaping the index. No planner rewrite, shipped",
-  "at full traffic, no rollback.",
+  "Spent the last 5 years on backend search and storage at Vellum. Most",
+  "relevant to what you are describing: cut p99 on a metadata hot path",
+  "from 1.2s to 280ms by reshaping the index. No planner rewrite. Shipped",
+  "at full traffic. No rollback.",
   "",
   "Resume and a short writeup of the fix below. Happy to chat whenever",
   "works for you.",
 ].join('\n')
 
 const FOUNDER_POST_DRAFT = [
-  "Hey Daniel — the \"wrong eval is worse than no eval\" line is exactly",
-  "what we hit at Brex.",
+  "Hey Daniel, the \"wrong eval is worse than no eval\" line is exactly",
+  "what we hit at Northwind.",
   "",
   "Rebuilt our eval setup three times before it actually predicted",
   "production behaviour. The second pass looked clean in dashboards but",
-  "was masking a 15% regression on long-tail intents — only caught it",
+  "was masking a 15% regression on long-tail intents. We only caught it",
   "because a single user complained.",
   "",
-  "Would love to hear how you're scoping the hand-labeled portion when",
+  "Would love to hear how you are scoping the hand-labeled portion when",
   "the domain shifts faster than the labelers.",
 ].join('\n')
 
@@ -437,7 +444,7 @@ function Demo() {
           <p className="eyebrow">See it in action</p>
           <h2 className="h2">What goes in.<br /><em>What comes out.</em></h2>
           <p className="lead">
-            Two real reach-out scenarios — one LinkedIn profile, one LinkedIn
+            Two real reach-out scenarios. One LinkedIn profile. One LinkedIn
             post. The screenshot on the left is what DraftIn captures and sends
             to GPT. The message on the right is what lands on your clipboard.
           </p>
@@ -452,19 +459,19 @@ function Demo() {
           <LinkedInProfileMock
             name="Priya Shah"
             pronouns="she/her"
-            headline="Engineering Manager, Search Infra @ Notion · ex-Stripe"
+            headline="Engineering Manager, Search Infra at Helix. Previously at Pier."
             location="San Francisco, California"
             connections="500+"
             banner="linear-gradient(120deg, #1F4E96 0%, #4A7BC8 55%, #84A9DE 100%)"
             avatarText="PS"
             avatarTint="#1F4E96"
             mutuals="Alex Chen, Sara Patel, and 6 other mutual connections"
-            about="I lead the Search Infrastructure team at Notion. We just shipped the workspace-wide search rewrite — cut p99 from 1.8s to 350ms without touching the query planner. Always hiring backend ICs who care about latency the way most people care about features."
+            about="I lead the Search Infrastructure team at Helix. We recently shipped the workspace-wide search rewrite. We cut p99 from 1.8s to 350ms without touching the query planner. Always hiring backend ICs who care about latency the way most people care about features."
             role="Engineering Manager, Search Infrastructure"
-            company="Notion"
-            companyInitial="N"
+            company="Helix"
+            companyInitial="H"
             companyTint="#0E0E10"
-            dates="Mar 2022 · Present"
+            dates="Mar 2022 to Present"
             duration="3 yrs 3 mos"
           />
         </ExampleRow>
@@ -477,13 +484,13 @@ function Demo() {
         >
           <LinkedInPostMock
             authorName="Daniel Mercer"
-            authorHeadline="Co-founder & CEO @ Reframe (YC W25) · building eval tooling for production LLM agents"
+            authorHeadline="Co-founder and CEO at Polaris (YC W25). Building eval tooling for production LLM agents."
             time="3d"
             avatarText="DM"
             avatarTint="#084E97"
             body={[
               "Hot take after 11 months of building eval tooling for production LLM agents: the wrong eval is worse than no eval.",
-              "A polished benchmark that looks great in dashboards but masks regressions on the long-tail prompts your real users hit is actively dangerous — it gives the team a false signal to ship.",
+              "A polished benchmark that looks great in dashboards but masks regressions on the long-tail prompts your real users hit is actively dangerous. It gives the team a false signal to ship.",
               "We rebuilt ours three times. The version that finally worked is the one that hurts when it disagrees with intuition."
             ].join('\n\n')}
             reactions="412"
@@ -507,16 +514,16 @@ function CapScreenshotHiringPost() {
           <div className="cap-shot-post-name">
             Priya Shah <span className="cap-shot-degree">· 2nd</span>
           </div>
-          <div className="cap-shot-post-headline">Eng Manager · Search Infra @ Notion · ex-Stripe</div>
+          <div className="cap-shot-post-headline">Eng Manager · Search Infra at Helix · ex-Pier</div>
           <div className="cap-shot-post-meta">3d · 🌐</div>
         </div>
         <span className="cap-shot-post-more">⋯</span>
       </div>
 
       <div className="cap-shot-post-body">
-        <p><strong>We're hiring 2 backend ICs on the Notion Search Infra team.</strong></p>
-        <p>If you've shipped narrow, surgical wins on a hot path — index reshapes,
-        query rewrites, p99 cuts under real load — I want to talk to you. DMs open.
+        <p><strong>We are hiring 2 backend engineers on the Helix Search Infra team.</strong></p>
+        <p>If you have shipped narrow, surgical wins on a hot path (index reshapes,
+        query rewrites, p99 cuts under real load), I want to talk. DMs open.
         Reposts appreciated <span className="cap-shot-emoji">🙏</span></p>
       </div>
 
@@ -548,7 +555,7 @@ function CapScreenshotProfileTop() {
       <div className="cap-shot-name">
         Priya Shah <span className="cap-shot-degree">· 2nd</span>
       </div>
-      <div className="cap-shot-headline">Eng Manager · Search Infra @ Notion · ex-Stripe</div>
+      <div className="cap-shot-headline">Eng Manager · Search Infra at Helix · ex-Pier</div>
       <div className="cap-shot-sub">San Francisco · 500+ connections</div>
       <div className="cap-shot-actions">
         <span className="cap-shot-btn cap-shot-btn-primary">Connect</span>
@@ -573,8 +580,8 @@ function CapScreenshotProfileExperience() {
           <div className="cap-shot-logo cap-shot-logo-sm" style={{ background: '#0E0E10' }}>N</div>
           <div>
             <div className="cap-shot-exp-role">Engineering Manager, Search Infrastructure</div>
-            <div className="cap-shot-exp-co">Notion · Full-time</div>
-            <div className="cap-shot-exp-d">Mar 2022 – Present · 3 yrs 3 mos</div>
+            <div className="cap-shot-exp-co">Helix · Full-time</div>
+            <div className="cap-shot-exp-d">Mar 2022 to Present · 3 yrs 3 mos</div>
             <div className="cap-shot-exp-d">San Francisco, California</div>
           </div>
         </div>
@@ -583,8 +590,8 @@ function CapScreenshotProfileExperience() {
           <div className="cap-shot-logo cap-shot-logo-sm" style={{ background: '#635BFF' }}>S</div>
           <div>
             <div className="cap-shot-exp-role">Senior Software Engineer</div>
-            <div className="cap-shot-exp-co">Stripe · Full-time</div>
-            <div className="cap-shot-exp-d">Jul 2018 – Mar 2022 · 3 yrs 9 mos</div>
+            <div className="cap-shot-exp-co">Pier · Full-time</div>
+            <div className="cap-shot-exp-d">Jul 2018 to Mar 2022 · 3 yrs 9 mos</div>
           </div>
         </div>
       </div>
@@ -698,7 +705,7 @@ function ChatGPTMock() {
           <span className="cg-side-dot" />
           Outreach to Priya Shah
         </div>
-        <div className="cg-side-item">Notion search infra notes</div>
+        <div className="cg-side-item">Helix search infra notes</div>
         <div className="cg-side-section">Yesterday</div>
         <div className="cg-side-item">Compare ANN libraries</div>
         <div className="cg-side-item">Pricing tier tradeoffs</div>
@@ -743,8 +750,8 @@ function ChatGPTMock() {
             </div>
             <div className="cg-bubble">
               Read these LinkedIn screenshots and draft a warm five-bullet intro
-              from me to this person. Ground every line in something on the page —
-              don't invent. If you don't recognize the company, web-search it.
+              from me to this person. Ground every line in something on the page.
+              Do not invent. If you do not recognize the company, web-search it.
               Tone: warm, specific, no buzzwords.
             </div>
           </div>
@@ -752,9 +759,9 @@ function ChatGPTMock() {
           <div className="cg-msg cg-msg-assistant">
             <div className="cg-avatar"><ChatGPTLogo size={20} /></div>
             <div className="cg-stream">
-              <div className="cg-stream-row">Hey Priya — saw the Search Infra hiring post.</div>
-              <div className="cg-stream-row">Spent the last 5 years on backend search/storage at Rubrik. Most</div>
-              <div className="cg-stream-row">relevant: cut p99 on a metadata hot path from 1.2s → 280ms by<span className="cg-cursor" /></div>
+              <div className="cg-stream-row">Hey Priya, saw the Search Infra hiring post.</div>
+              <div className="cg-stream-row">Spent the last 5 years on backend search and storage at Vellum. Most</div>
+              <div className="cg-stream-row">relevant: cut p99 on a metadata hot path from 1.2s to 280ms by<span className="cg-cursor" /></div>
             </div>
           </div>
         </div>
@@ -815,12 +822,12 @@ function LinkedInDMMock() {
             Just pasted from clipboard
           </div>
           <div className="dm-compose-text">
-            Hey Priya — saw the Search Infra hiring post.
+            Hey Priya, saw the Search Infra hiring post.
             <br /><br />
-            Spent the last 5 years on backend search/storage at Rubrik. Most
-            relevant to what you're describing: cut p99 on a metadata hot path
-            from 1.2s → 280ms by reshaping the index. No planner rewrite,
-            shipped at full traffic, no rollback.
+            Spent the last 5 years on backend search and storage at Vellum.
+            Most relevant to what you are describing: cut p99 on a metadata
+            hot path from 1.2s to 280ms by reshaping the index. No planner
+            rewrite. Shipped at full traffic. No rollback.
             <br /><br />
             Resume and a short writeup of the fix below. Happy to chat whenever
             works for you.
@@ -836,11 +843,6 @@ function LinkedInDMMock() {
             <button className="dm-send">Send</button>
           </div>
         </div>
-      </div>
-
-      <div className="dm-paste-kbd">
-        <span className="dm-paste-kbd-key">⌘</span>
-        <span className="dm-paste-kbd-key">V</span>
       </div>
 
       <div className="dm-tips">
@@ -867,21 +869,21 @@ const STEPS = [
     n: '01',
     viz: CaptureMock,
     title: 'Capture',
-    body: 'Hit Alt+K on any tab — a manager\'s hiring post that crossed your feed, then their profile, then their Experience section after a scroll. Each viewport snaps into a buffer as you browse. Every screenshot becomes shared context for one combined draft.',
+    body: 'Press Alt+K on any tab. The visible viewport is saved to a buffer. Stack a hiring post, then the manager\'s profile, then the section you scrolled to. Every screenshot becomes context for the same draft.',
     tag: 'Chrome captureVisibleTab',
   },
   {
     n: '02',
     viz: ChatGPTMock,
     title: 'Draft',
-    body: 'Hit Alt+L. A local server bundles the screenshots, attaches your me.md profile, and pipes the whole thing into a hidden ChatGPT session via Oracle. GPT vision reads the screenshots directly, web-searches the company if it doesn\'t know it, and writes a warm five-bullet intro grounded in what it actually saw — no DOM scraping, no API key.',
+    body: 'Press Alt+L. A local server bundles the screenshots, attaches your me.md, and hands the whole thing to a hidden ChatGPT session. GPT vision reads the images directly. It searches the company if it does not recognize the name. It writes a warm five-bullet intro grounded in what it actually saw. No DOM scraping. No API key.',
     tag: 'Oracle CLI · GPT-5.5',
   },
   {
     n: '03',
     viz: LinkedInDMMock,
     title: 'Paste',
-    body: 'The drafted message lands on your system clipboard the moment it returns. Hit ⌘V into LinkedIn, iMessage, anywhere. Don\'t love the draft? Alt+L again re-rolls without re-uploading the screenshots. Done with this thread? Alt+C empties the buffer so the next capture starts fresh.',
+    body: 'The draft lands on your system clipboard the moment it returns. Press ⌘V into LinkedIn, iMessage, anywhere. If you do not like the draft, press Alt+L again to re-roll without re-uploading. If you are done with the thread, press Alt+C to clear the buffer so the next capture starts fresh.',
     tag: 'pbcopy · xclip · clip.exe',
   },
 ]
@@ -892,8 +894,8 @@ function HowItWorks() {
       <div className="container">
         <div className="how-head">
           <p className="eyebrow">How it works</p>
-          <h2 className="h2">Three keystrokes.<br /><em>That's the whole tool.</em></h2>
-          <p className="lead">No popup. No form. No template picker. The keyboard is the UI.</p>
+          <h2 className="h2">Three keystrokes.<br /><em>That is the whole tool.</em></h2>
+          <p className="lead">No popup. No form. No template picker. The keyboard is the interface.</p>
         </div>
         <div className="steps">
           {STEPS.map((s, i) => <StepCard key={s.n} step={s} delay={i * 80} />)}
@@ -926,22 +928,22 @@ const STACK = [
   {
     label: 'Extension',
     title: 'Chrome MV3',
-    desc: 'A single content script, a service worker, and an offscreen helper. No popup UI, no settings page, no telemetry. Keyboard commands are the entire surface area: Alt+K to capture, Alt+L to draft, Alt+C to clear.',
+    desc: 'A single content script, a service worker, and an offscreen helper. No popup UI. No settings page. No telemetry. The keyboard is the entire surface. Alt+K to capture. Alt+L to draft. Alt+C to clear.',
   },
   {
     label: 'Local Server',
     title: 'Node HTTP on 127.0.0.1',
-    desc: 'A 200-line Node server. POST /generate with the screenshot buffer, get a drafted message back. No auth, no DB, no rate limits — everything stays on your machine. Your me.md sits beside the source as the single source of personalization.',
+    desc: 'A 200-line Node server. POST /generate with the screenshot buffer, get a drafted message back. No auth. No database. No rate limits. Everything stays on your machine. Your me.md sits beside the source as the single source of personalization.',
   },
   {
     label: 'LLM',
     title: 'Oracle · GPT-5.5 vision via browser',
-    desc: 'Oracle is a CLI that drives ChatGPT in a hidden Chromium window. GPT vision reads each screenshot directly, web-searches the recipient\'s company if it doesn\'t recognize it, and writes a five-bullet warm intro grounded in what it saw. You pay nothing per draft — it rides your existing subscription.',
+    desc: 'A small CLI drives ChatGPT in a hidden Chromium window. GPT vision reads each screenshot directly. It searches the recipient\'s company if it does not recognize the name. It writes a five-bullet warm intro grounded in what it saw. You pay nothing per draft. The tool rides your existing subscription.',
   },
   {
     label: 'Clipboard',
     title: 'pbcopy · xclip · clip.exe',
-    desc: 'The clipboard write happens server-side, not in the extension. Chrome MV3 service workers can\'t reliably write to the clipboard when the toolbar steals focus — so the local server, which always has a shell, owns that step. Cross-platform: pbcopy on macOS, xclip on Linux, clip.exe on Windows.',
+    desc: 'The clipboard write happens server-side, not in the extension. Chrome MV3 service workers cannot reliably write to the clipboard when the toolbar steals focus. The local server, which always has a shell, owns that step. pbcopy on macOS, xclip on Linux, clip.exe on Windows.',
   },
 ]
 
@@ -952,7 +954,7 @@ function Stack() {
       <div className="container">
         <div ref={ref} className={`stack-head${visible ? ' visible' : ''}`}>
           <p className="eyebrow">Under the hood</p>
-          <h2 className="h2">Boring stack.<br /><em>By design.</em></h2>
+          <h2 className="h2">The pieces.<br /><em>Plain parts.</em></h2>
         </div>
         <div className="stack-grid">
           {STACK.map((c, i) => <StackCard key={c.label} card={c} delay={i * 70} />)}
@@ -979,8 +981,8 @@ function CTABanner() {
   return (
     <section className="cta-section" ref={ref}>
       <div className={`cta-inner${visible ? ' visible' : ''}`}>
-        <h2 className="cta-h">Stop writing the same intro twice.</h2>
-        <p className="cta-p">Free, open source, and runs entirely on your machine. Clone it, point it at your me.md, hit Alt+L.</p>
+        <h2 className="cta-h">Send a message that does not sound like a template.</h2>
+        <p className="cta-p">Free. Open source. Runs entirely on your machine. Clone it, point it at your me.md, press Alt+L.</p>
         <a href={GH} className="btn-cta" target="_blank" rel="noopener noreferrer">
           <GithubIcon size={16} />
           View on GitHub
@@ -996,8 +998,8 @@ function Footer() {
     <footer className="footer">
       <div className="footer-left">
         <span className="footer-logo">
-          <BrandMark size={20} />
-          DraftIn
+          <span className="footer-logo-word">Draft</span>
+          <span className="footer-logo-tile" aria-hidden>in</span>
         </span>
         <span className="footer-sub">by <strong>Loukik Naik</strong></span>
       </div>
@@ -1020,9 +1022,8 @@ function FlowVideo() {
           <p className="eyebrow">The whole flow</p>
           <h2 className="h2">From scroll<br /><em>to send.</em></h2>
           <p className="lead">
-            Three Alt+K presses while you browse. One Alt+L. ⌘V into a LinkedIn DM. No
-            popup, no editor, no API key — your ChatGPT subscription doing the writing
-            from screenshots you already saw.
+            Three Alt+K presses while you browse. One Alt+L when you are ready.
+            ⌘V into the DM. No popup. No editor. No extra subscription.
           </p>
         </div>
         <div className={`flow-video-wrap${visible ? ' visible' : ''}`}>
