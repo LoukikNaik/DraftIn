@@ -1,4 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
-  <rect width="128" height="128" rx="24" ry="24" fill="#0A66C2"/>
-  <text x="64" y="94" font-family="-apple-system, 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif" font-weight="900" font-size="92" letter-spacing="-3" fill="#FFFFFF" text-anchor="middle">in</text>
+  <rect width="128" height="128" rx="26" ry="26" fill="#0A66C2"/>
+  <g transform="translate(64 64)">
+    <path d="
+      M 0 -46
+      C -14 -46 -20 -40 -20 -30
+      L -20 16
+      Q -20 19 -18 21
+      L 0 46
+      L 18 21
+      Q 20 19 20 16
+      L 20 -30
+      C 20 -40 14 -46 0 -46 Z
+    " fill="#FFFFFF"/>
+    <line x1="0" y1="-16" x2="0" y2="40" stroke="#0A66C2" stroke-width="2.6" stroke-linecap="round"/>
+    <circle cx="0" cy="-20" r="3.8" fill="#0A66C2"/>
+  </g>
 </svg>
