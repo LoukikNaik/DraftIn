@@ -8,7 +8,7 @@ const supportedImageTypes = new Set(["image/png", "image/jpeg"]);
 export async function createScreenshotAttachment(dataUrl, options = {}) {
   const parsed = parseImageDataUrl(dataUrl);
   const extension = parsed.mediaType === "image/jpeg" ? "jpg" : "png";
-  const filePath = path.join(options.tempDir ?? tmpdir(), `lreachout-${randomUUID()}.${extension}`);
+  const filePath = path.join(options.tempDir ?? tmpdir(), `draftin-${randomUUID()}.${extension}`);
 
   await writeFile(filePath, parsed.buffer);
 

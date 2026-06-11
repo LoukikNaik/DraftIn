@@ -88,7 +88,7 @@ function validRequest() {
 }
 
 async function createTempDir() {
-  const dir = await mkdtemp(path.join(tmpdir(), "lreachout-"));
+  const dir = await mkdtemp(path.join(tmpdir(), "draftin-"));
   tempDirs.push(dir);
   return dir;
 }

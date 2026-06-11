@@ -1,4 +1,4 @@
-const STORAGE_KEY = "lreachout.screenshots";
+const STORAGE_KEY = "draftin.screenshots";
 
 export async function getScreenshots(options = {}) {
   const storage = resolveStorage(options);

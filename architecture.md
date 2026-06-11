@@ -1,4 +1,4 @@
-# lreachout Architecture
+# DraftIn Architecture
 
 This project helps draft a LinkedIn reach-out message.
 
@@ -65,7 +65,7 @@ This keeps the extension simple and avoids putting AI API keys inside the browse
 8. The server builds a prompt with your background and the LinkedIn page context.
 9. The server runs Oracle using hidden browser mode and GPT-5.5 Instant by default.
 10. The server does not attach screenshots to Oracle by default because browser uploads can timeout.
-11. If `LREACHOUT_ATTACH_SCREENSHOT=true` is set, the server also writes the screenshot to a temporary file and attaches it to Oracle.
+11. If `DRAFTIN_ATTACH_SCREENSHOT=true` is set, the server also writes the screenshot to a temporary file and attaches it to Oracle.
 12. Oracle returns a draft.
 13. The server sends the draft back.
 14. The extension copies the draft to the clipboard.
@@ -97,7 +97,7 @@ npm run start:server
 Expected result:
 
 ```text
-lreachout server listening on http://127.0.0.1:17391
+draftin server listening on http://127.0.0.1:17391
 ```
 
 Leave this command running while testing the extension.
@@ -196,12 +196,12 @@ This part cannot be fully done from the terminal because Chrome requires manual 
 5. Select this folder:
 
 ```text
-/Users/loukiknaik/projects/lreachout/extension
+/Users/loukiknaik/projects/draftin/extension
 ```
 
 Expected result:
 
-- Chrome shows the `lreachout` extension.
+- Chrome shows the `DraftIn` extension.
 
 ### 8. Test On LinkedIn
 

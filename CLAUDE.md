@@ -1,4 +1,4 @@
-# lreachout
+# DraftIn
 
 A keyboard-driven LinkedIn reach-out drafter. The user pulls up a LinkedIn page, scrolls to whatever they want the model to see, hits `Alt+L`, and the generated message is on the system clipboard ready for `⌘V`. For richer context (LinkedIn profile *plus* a JD on a separate site) they hit `Alt+K` on each page to add it to a buffer, then `Alt+L` to send the buffer as one request.
 
@@ -45,7 +45,7 @@ architecture.md          Original architecture notes.
 
 ```bash
 # Start the server (foreground)
-LREACHOUT_PROFILE_PATH=profile/me.md node server/src/index.js
+DRAFTIN_PROFILE_PATH=profile/me.md node server/src/index.js
 
 # Load the extension once: chrome://extensions → Developer mode → Load unpacked → extension/
 # Reload it (and the LinkedIn tab) whenever extension/src/ changes.
@@ -77,10 +77,10 @@ There is no build step. Everything runs as ESM in Node `>=20` and in Chrome MV3.
 
 Env vars (all optional):
 
-- `LREACHOUT_PORT` — server port (default `17391`, matches manifest `host_permissions`).
-- `LREACHOUT_HOST` — bind address (default `127.0.0.1`).
-- `LREACHOUT_PROFILE_PATH` — path to the personal-context markdown file.
-- `LREACHOUT_ORACLE_COMMAND` / `LREACHOUT_ORACLE_ARGS` — override how Oracle is invoked.
+- `DRAFTIN_PORT` — server port (default `17391`, matches manifest `host_permissions`).
+- `DRAFTIN_HOST` — bind address (default `127.0.0.1`).
+- `DRAFTIN_PROFILE_PATH` — path to the personal-context markdown file.
+- `DRAFTIN_ORACLE_COMMAND` / `DRAFTIN_ORACLE_ARGS` — override how Oracle is invoked.
 
 The screenshot is always attached. There is no opt-out flag, by design — the prompt assumes it.
 
@@ -98,11 +98,11 @@ The screenshot is always attached. There is no opt-out flag, by design — the p
 - `--browser-recheck-timeout 4m` — how long to keep polling after the answer first appears.
 - `--browser-min-stable-ms 15s` — floors the "answer is stable" threshold so ChatGPT's mid-stream pauses (image analysis, search) don't trip premature capture.
 
-Setting `LREACHOUT_ORACLE_ARGS` **replaces this entire list** (it is not merged), so pass the full set when overriding — e.g. to raise the timeout further:
+Setting `DRAFTIN_ORACLE_ARGS` **replaces this entire list** (it is not merged), so pass the full set when overriding — e.g. to raise the timeout further:
 
 ```bash
-LREACHOUT_PROFILE_PATH=profile/me.md \
-LREACHOUT_ORACLE_ARGS="--engine browser --browser-hide-window --model gpt-5.5-instant --force --browser-timeout 15m --browser-recheck-delay 30s --browser-recheck-timeout 5m --browser-min-stable-ms 15s" \
+DRAFTIN_PROFILE_PATH=profile/me.md \
+DRAFTIN_ORACLE_ARGS="--engine browser --browser-hide-window --model gpt-5.5-instant --force --browser-timeout 15m --browser-recheck-delay 30s --browser-recheck-timeout 5m --browser-min-stable-ms 15s" \
 node server/src/index.js
 ```
 
@@ -111,7 +111,7 @@ If you change the defaults in `config.js`, update the assertion in `server/test/
 ## Known footguns
 
 - Reloading the extension at `chrome://extensions` is not enough on its own; reload the LinkedIn tab too so a fresh content runtime is injected.
-- If you change `LREACHOUT_PORT`, also update `host_permissions` in `extension/manifest.json` and the URL in `extension/src/server-client.js`.
-- If Oracle is not installed at the hardcoded local path, set `LREACHOUT_ORACLE_COMMAND=oracle` and ensure it's on `$PATH`.
+- If you change `DRAFTIN_PORT`, also update `host_permissions` in `extension/manifest.json` and the URL in `extension/src/server-client.js`.
+- If Oracle is not installed at the hardcoded local path, set `DRAFTIN_ORACLE_COMMAND=oracle` and ensure it's on `$PATH`.
 - `Alt+K` on a `chrome://` page or the Chrome Web Store will silently fail — those pages don't allow scripting from extensions. Use it on real http(s) pages.
 - The screenshot buffer lives in `chrome.storage.session`. Reloading the extension or quitting Chrome clears it; navigation within a session does not.

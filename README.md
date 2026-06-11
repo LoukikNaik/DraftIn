@@ -1,10 +1,10 @@
-# lreachout
+# DraftIn
 
 Chrome extension concept for drafting personalized LinkedIn reach-out messages without storing custom LLM API keys in the browser.
 
 ## Goal
 
-`lreachout` should help draft short, relevant LinkedIn messages when viewing a LinkedIn profile, job post, recruiter page, hiring manager page, or company page. The user invokes the extension from the Chrome toolbar or a keyboard shortcut, and the extension gathers page context, sends it to a local service, asks Oracle to generate a draft through ChatGPT, then makes the result easy to paste into LinkedIn.
+`DraftIn` should help draft short, relevant LinkedIn messages when viewing a LinkedIn profile, job post, recruiter page, hiring manager page, or company page. The user invokes the extension from the Chrome toolbar or a keyboard shortcut, and the extension gathers page context, sends it to a local service, asks Oracle to generate a draft through ChatGPT, then makes the result easy to paste into LinkedIn.
 
 ## Initial Scope
 
@@ -64,7 +64,7 @@ Oracle is used as the model access layer:
 
 - Upstream repository: <https://github.com/steipete/oracle>
 - Site: <https://askoracle.sh/>
-- **Fork required for lreachout**: <https://github.com/LoukikNaik/oracle>. The default `getOracleArgs()` in `server/src/config.js` passes `--browser-min-stable-ms` and other flags that only exist on this fork (see branches `fix/browser-attachment-composer-scope` for the chip-scope + min-stable-ms fixes used by the multi-screenshot flow).
+- **Fork required for DraftIn**: <https://github.com/LoukikNaik/oracle>. The default `getOracleArgs()` in `server/src/config.js` passes `--browser-min-stable-ms` and other flags that only exist on this fork (see branches `fix/browser-attachment-composer-scope` for the chip-scope + min-stable-ms fixes used by the multi-screenshot flow).
 - Clone the fork at `/Users/loukiknaik/projects/oracle` (the path `localOracleCli` in `server/src/config.js` resolves to). Build it with `pnpm install && pnpm run build` so `dist/bin/oracle-cli.js` exists.
 - It can drive ChatGPT through a browser session instead of using direct LLM API calls.
 - The user must be logged into ChatGPT in the Oracle/browser environment.
@@ -198,11 +198,11 @@ By default, the server invokes the patched local Oracle CLI with hidden browser 
 Optional environment variables:
 
 ```bash
-LREACHOUT_PORT=17391
-LREACHOUT_HOST=127.0.0.1
-LREACHOUT_PROFILE_PATH=profile/me.md
-LREACHOUT_ORACLE_ARGS="--engine browser --browser-model-strategy current"
-LREACHOUT_ATTACH_SCREENSHOT=true
+DRAFTIN_PORT=17391
+DRAFTIN_HOST=127.0.0.1
+DRAFTIN_PROFILE_PATH=profile/me.md
+DRAFTIN_ORACLE_ARGS="--engine browser --browser-model-strategy current"
+DRAFTIN_ATTACH_SCREENSHOT=true
 ```
 
 Load the Chrome extension:
@@ -240,7 +240,7 @@ Note: the extension always captures a screenshot, but the server does not attach
 To attach screenshots anyway, start the server with:
 
 ```bash
-LREACHOUT_ATTACH_SCREENSHOT=true npm run start:server
+DRAFTIN_ATTACH_SCREENSHOT=true npm run start:server
 ```
 
 When enabled, server logs should show `1 attachments`, and the Oracle command should include an extra screenshot file.

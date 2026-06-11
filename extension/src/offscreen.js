@@ -1,5 +1,5 @@
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
-  if (message?.type !== "LREACHOUT_OFFSCREEN_COPY") {
+  if (message?.type !== "DRAFTIN_OFFSCREEN_COPY") {
     return false;
   }
 

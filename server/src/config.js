@@ -3,8 +3,8 @@ import { existsSync } from "node:fs";
 const localOracleCli = "/Users/loukiknaik/projects/oracle/dist/bin/oracle-cli.js";
 
 export function getOracleCommand(env = process.env, fs = { existsSync }) {
-  if (env.LREACHOUT_ORACLE_COMMAND?.trim()) {
-    return env.LREACHOUT_ORACLE_COMMAND.trim();
+  if (env.DRAFTIN_ORACLE_COMMAND?.trim()) {
+    return env.DRAFTIN_ORACLE_COMMAND.trim();
   }
 
   if (fs.existsSync(localOracleCli)) {
@@ -15,7 +15,7 @@ export function getOracleCommand(env = process.env, fs = { existsSync }) {
 }
 
 export function getOracleCommandArgs(env = process.env, fs = { existsSync }) {
-  if (env.LREACHOUT_ORACLE_COMMAND?.trim()) {
+  if (env.DRAFTIN_ORACLE_COMMAND?.trim()) {
     return [];
   }
 
@@ -27,8 +27,8 @@ export function getOracleCommandArgs(env = process.env, fs = { existsSync }) {
 }
 
 export function getOracleArgs(env = process.env) {
-  if (env.LREACHOUT_ORACLE_ARGS?.trim()) {
-    return splitArgs(env.LREACHOUT_ORACLE_ARGS);
+  if (env.DRAFTIN_ORACLE_ARGS?.trim()) {
+    return splitArgs(env.DRAFTIN_ORACLE_ARGS);
   }
 
   return [

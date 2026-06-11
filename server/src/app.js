@@ -26,19 +26,19 @@ export function createHandler(options = {}) {
   return async (request, response) => {
     try {
       if (request.method === "GET" && request.url === "/health") {
-        logger.info?.("[lreachout] GET /health");
+        logger.info?.("[draftin] GET /health");
         sendJson(response, 200, { ok: true });
         return;
       }
 
       if (request.method === "POST" && request.url === "/generate") {
         const startedAt = Date.now();
-        logger.info?.("[lreachout] POST /generate received");
+        logger.info?.("[draftin] POST /generate received");
         const payload = await readJson(request);
         const validationError = validateGenerateRequest(payload);
 
         if (validationError) {
-          logger.warn?.(`[lreachout] POST /generate rejected: ${validationError}`);
+          logger.warn?.(`[draftin] POST /generate rejected: ${validationError}`);
           sendJson(response, 400, {
             error: {
               code: "INVALID_GENERATE_REQUEST",
@@ -52,19 +52,19 @@ export function createHandler(options = {}) {
         const clipboard = await copyToClipboard(result.message);
         if (clipboard.copied) {
           logger.info?.(
-            `[lreachout] copied ${result.message.length} chars to system clipboard via ${clipboard.command}`,
+            `[draftin] copied ${result.message.length} chars to system clipboard via ${clipboard.command}`,
           );
         } else {
-          logger.warn?.(`[lreachout] system clipboard copy failed: ${clipboard.error}`);
+          logger.warn?.(`[draftin] system clipboard copy failed: ${clipboard.error}`);
         }
         logger.info?.(
-          `[lreachout] POST /generate completed in ${Date.now() - startedAt}ms (${result.message.length} chars)`,
+          `[draftin] POST /generate completed in ${Date.now() - startedAt}ms (${result.message.length} chars)`,
         );
         sendJson(response, 200, { ...result, clipboard });
         return;
       }
 
-      logger.warn?.(`[lreachout] ${request.method} ${request.url} not found`);
+      logger.warn?.(`[draftin] ${request.method} ${request.url} not found`);
       sendJson(response, 404, {
         error: {
           code: "NOT_FOUND",
@@ -73,7 +73,7 @@ export function createHandler(options = {}) {
       });
     } catch (error) {
       const statusCode = error.code === "ORACLE_GENERATION_FAILED" ? 502 : 500;
-      logger.error?.(`[lreachout] ${request.method} ${request.url} failed: ${error.message}`);
+      logger.error?.(`[draftin] ${request.method} ${request.url} failed: ${error.message}`);
 
       sendJson(response, statusCode, {
         error: {

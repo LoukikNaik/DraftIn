@@ -16,7 +16,7 @@ export function createGenerationService({
   const runner = oracleRunner ?? defaultOracleRunner;
 
   return async function generate(request) {
-    logger.info?.("[lreachout] loading personal context");
+    logger.info?.("[draftin] loading personal context");
     const personalContext = await loadPersonalContext(profilePath);
     const screenshots = Array.isArray(request.screenshots) ? request.screenshots : [];
     const attachments = attachScreenshot
@@ -24,14 +24,14 @@ export function createGenerationService({
           screenshots.map((dataUrl) => createScreenshotAttachment(dataUrl, { tempDir })),
         )
       : [];
-    logger.info?.("[lreachout] building Oracle prompt");
+    logger.info?.("[draftin] building Oracle prompt");
     const prompt = buildPrompt({
       personalContext,
       request,
       hasScreenshot: attachments.length > 0,
     });
     logger.info?.(
-      `[lreachout] invoking Oracle (${prompt.length} prompt chars, ${attachments.length} attachments)`,
+      `[draftin] invoking Oracle (${prompt.length} prompt chars, ${attachments.length} attachments)`,
     );
 
     try {
@@ -40,14 +40,14 @@ export function createGenerationService({
         attachments,
       });
       const normalized = normalizeBulletMarkers(message.trim());
-      logger.info?.(`[lreachout] Oracle returned ${normalized.length} chars`);
+      logger.info?.(`[draftin] Oracle returned ${normalized.length} chars`);
 
       return {
         message: normalized,
         source: "oracle",
       };
     } catch (error) {
-      logger.error?.(`[lreachout] Oracle failed: ${error.message}`);
+      logger.error?.(`[draftin] Oracle failed: ${error.message}`);
       const controlledError = new Error(`Oracle generation failed: ${error.message}`);
       controlledError.code = "ORACLE_GENERATION_FAILED";
       controlledError.cause = error;

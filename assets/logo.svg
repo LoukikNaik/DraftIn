@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 90" role="img" aria-label="Draftin">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@700;900&amp;display=swap');
+    text { font-family: 'Source Sans 3', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; }
+  </style>
+  <text x="2" y="72" font-size="84" font-weight="700" letter-spacing="-1.5" fill="#0E0E10">Draft</text>
+  <rect x="198" y="14" width="72" height="72" rx="14" ry="14" fill="#0A66C2"/>
+  <text x="234" y="71" font-size="60" font-weight="900" letter-spacing="-2" fill="#FFFFFF" text-anchor="middle">in</text>
+</svg>

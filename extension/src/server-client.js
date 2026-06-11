@@ -23,7 +23,7 @@ export async function generateMessage({
     return body;
   } catch (error) {
     if (error instanceof TypeError) {
-      throw new Error("Start the local lreachout server on 127.0.0.1:17391, then try again.");
+      throw new Error("Start the local draftin server on 127.0.0.1:17391, then try again.");
     }
 
     throw error;

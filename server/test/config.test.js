@@ -28,7 +28,7 @@ describe("server config", () => {
   });
 
   it("allows explicit Oracle args to override the default", () => {
-    assert.deepEqual(getOracleArgs({ LREACHOUT_ORACLE_ARGS: "--engine browser --browser-model-strategy current" }), [
+    assert.deepEqual(getOracleArgs({ DRAFTIN_ORACLE_ARGS: "--engine browser --browser-model-strategy current" }), [
       "--engine",
       "browser",
       "--browser-model-strategy",
@@ -55,8 +55,8 @@ describe("server config", () => {
   });
 
   it("allows explicit Oracle command override", () => {
-    assert.equal(getOracleCommand({ LREACHOUT_ORACLE_COMMAND: "oracle" }), "oracle");
-    assert.deepEqual(getOracleCommandArgs({ LREACHOUT_ORACLE_COMMAND: "oracle" }), []);
+    assert.equal(getOracleCommand({ DRAFTIN_ORACLE_COMMAND: "oracle" }), "oracle");
+    assert.deepEqual(getOracleCommandArgs({ DRAFTIN_ORACLE_COMMAND: "oracle" }), []);
   });
 
 });

@@ -6,9 +6,9 @@ import {
 } from "./config.js";
 import { createOracleRunner } from "./oracle-runner.js";
 
-const port = Number.parseInt(process.env.LREACHOUT_PORT ?? "17391", 10);
-const host = process.env.LREACHOUT_HOST ?? "127.0.0.1";
-const profilePath = process.env.LREACHOUT_PROFILE_PATH ?? "profile/me.md";
+const port = Number.parseInt(process.env.DRAFTIN_PORT ?? "17391", 10);
+const host = process.env.DRAFTIN_HOST ?? "127.0.0.1";
+const profilePath = process.env.DRAFTIN_PROFILE_PATH ?? "profile/me.md";
 
 const server = createServer({
   profilePath,
@@ -19,8 +19,8 @@ const server = createServer({
 });
 
 server.listen(port, host, () => {
-  console.log(`lreachout server listening on http://${host}:${port}`);
-  console.log(`lreachout profile: ${profilePath}`);
-  console.log(`lreachout oracle command: ${getOracleCommand()}`);
-  console.log(`lreachout oracle args: ${[...getOracleCommandArgs(), ...getOracleArgs()].join(" ")}`);
+  console.log(`draftin server listening on http://${host}:${port}`);
+  console.log(`draftin profile: ${profilePath}`);
+  console.log(`draftin oracle command: ${getOracleCommand()}`);
+  console.log(`draftin oracle args: ${[...getOracleCommandArgs(), ...getOracleArgs()].join(" ")}`);
 });

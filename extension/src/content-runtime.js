@@ -1,9 +1,9 @@
 (() => {
   function showOverlay({ message, copied, error, status: providedStatus }, documentRef = document) {
-    documentRef.getElementById?.("lreachout-overlay")?.remove?.();
+    documentRef.getElementById?.("draftin-overlay")?.remove?.();
 
     const overlay = documentRef.createElement("div");
-    overlay.id = "lreachout-overlay";
+    overlay.id = "draftin-overlay";
     overlay.style.cssText = [
       "position: fixed",
       "right: 24px",
@@ -20,7 +20,7 @@
     ].join(";");
 
     const status = providedStatus ?? (error
-      ? `lreachout error: ${error}`
+      ? `draftin error: ${error}`
       : `Draft ready${copied ? " - copied" : ""}`);
 
     overlay.textContent = message ? `${status}\n\n${message}` : status;
@@ -30,13 +30,13 @@
   }
 
   function handleContentMessage(message) {
-    if (message?.type === "LREACHOUT_PING") {
+    if (message?.type === "DRAFTIN_PING") {
       return {
         ok: true,
       };
     }
 
-    if (message?.type === "LREACHOUT_COPY_MESSAGE") {
+    if (message?.type === "DRAFTIN_COPY_MESSAGE") {
       return copyFromPage(document, message.message ?? "").then((copied) => ({
         ok: true,
         copied,
@@ -45,7 +45,7 @@
 
     return {
       ok: false,
-      error: "Unknown lreachout message type",
+      error: "Unknown DraftIn message type",
     };
   }
 
@@ -58,7 +58,7 @@
         await clipboard.writeText(message);
         return true;
       } catch (error) {
-        console.warn("[lreachout] navigator.clipboard.writeText failed; falling back to execCommand", error);
+        console.warn("[draftin] navigator.clipboard.writeText failed; falling back to execCommand", error);
       }
     }
 
@@ -78,7 +78,7 @@
     try {
       succeeded = Boolean(documentRef.execCommand("copy"));
     } catch (error) {
-      console.warn("[lreachout] execCommand copy threw", error);
+      console.warn("[draftin] execCommand copy threw", error);
     } finally {
       documentRef.body.removeChild(textarea);
       previousActive?.focus?.();
@@ -88,8 +88,8 @@
   }
 
   chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
-    console.info("[lreachout] content message", message?.type);
-    if (message?.type === "LREACHOUT_SHOW_OVERLAY") {
+    console.info("[draftin] content message", message?.type);
+    if (message?.type === "DRAFTIN_SHOW_OVERLAY") {
       showOverlay(message);
       sendResponse({ ok: true });
       return false;

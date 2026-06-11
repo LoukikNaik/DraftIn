@@ -1,10 +1,10 @@
 {
   "manifest_version": 3,
-  "name": "lreachout",
+  "name": "DraftIn",
   "version": "0.1.0",
   "description": "Draft personalized LinkedIn reach-out messages through a local Oracle-backed server.",
   "action": {
-    "default_title": "lreachout: draft LinkedIn message"
+    "default_title": "DraftIn: draft LinkedIn message"
   },
   "background": {
     "service_worker": "src/background.js",

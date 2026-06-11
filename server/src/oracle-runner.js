@@ -13,7 +13,7 @@ export function createOracleRunner(options = {}) {
 
   return {
     async run({ prompt, attachments }) {
-      const promptPath = path.join(tempDir, `lreachout-prompt-${randomUUID()}.md`);
+      const promptPath = path.join(tempDir, `draftin-prompt-${randomUUID()}.md`);
       await writeFile(promptPath, prompt, "utf8");
 
       try {
@@ -29,7 +29,7 @@ export function createOracleRunner(options = {}) {
           args.push("--file", attachment);
         }
 
-        logger.info?.(`[lreachout] running Oracle command: ${command} ${redactArgs(args).join(" ")}`);
+        logger.info?.(`[draftin] running Oracle command: ${command} ${redactArgs(args).join(" ")}`);
         return await runCommand(spawnFn, command, args);
       } finally {
         await rm(promptPath, { force: true });
@@ -44,7 +44,7 @@ function redactArgs(args) {
       return '"<prompt>"';
     }
 
-    return arg.includes("lreachout-prompt-") ? "<prompt-file>" : arg;
+    return arg.includes("draftin-prompt-") ? "<prompt-file>" : arg;
   });
 }
 

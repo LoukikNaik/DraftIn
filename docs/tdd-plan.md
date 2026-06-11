@@ -1,6 +1,6 @@
 # TDD Plan
 
-This plan defines the test-first implementation path for `lreachout`: a Chrome extension that extracts LinkedIn context, captures a screenshot, sends both to a local HTTP server, invokes Oracle, and returns a draft reach-out message for clipboard use.
+This plan defines the test-first implementation path for `DraftIn`: a Chrome extension that extracts LinkedIn context, captures a screenshot, sends both to a local HTTP server, invokes Oracle, and returns a draft reach-out message for clipboard use.
 
 ## Principles
 

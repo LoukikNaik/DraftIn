@@ -5,7 +5,7 @@ import { handleContentMessage, showOverlay } from "../src/content-script.js";
 
 describe("content script message handling", () => {
   it("responds to ping so the background worker can detect active injection", () => {
-    const response = handleContentMessage({ type: "LREACHOUT_PING" }, {});
+    const response = handleContentMessage({ type: "DRAFTIN_PING" }, {});
 
     assert.deepEqual(response, { ok: true });
   });
@@ -28,7 +28,7 @@ describe("content script message handling", () => {
     };
 
     const response = await handleContentMessage(
-      { type: "LREACHOUT_COPY_MESSAGE", message: "Hi Taylor" },
+      { type: "DRAFTIN_COPY_MESSAGE", message: "Hi Taylor" },
       { document },
     );
 
@@ -68,7 +68,7 @@ describe("content script message handling", () => {
     };
 
     const response = await handleContentMessage(
-      { type: "LREACHOUT_COPY_MESSAGE", message: "Hi Taylor" },
+      { type: "DRAFTIN_COPY_MESSAGE", message: "Hi Taylor" },
       { document },
     );
 

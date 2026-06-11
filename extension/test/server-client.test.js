@@ -28,7 +28,7 @@ describe("local server client", () => {
             throw new TypeError("fetch failed");
           },
         }),
-      /Start the local lreachout server/,
+      /Start the local draftin server/,
     );
   });
 

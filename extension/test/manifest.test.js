@@ -11,7 +11,7 @@ describe("extension manifest", () => {
     assert.equal(manifest.background.type, "module");
     assert.deepEqual(manifest.content_scripts[0].js, ["src/content-runtime.js"]);
     assert.equal(manifest.content_scripts[0].type, undefined);
-    assert.ok(manifest.action.default_title.includes("lreachout"));
+    assert.ok(manifest.action.default_title.includes("DraftIn"));
     assert.ok(manifest.commands["draft-linkedin-message"]);
     assert.deepEqual(manifest.host_permissions.sort(), [
       "http://127.0.0.1:17391/*",
